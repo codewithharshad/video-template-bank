@@ -1,0 +1,16 @@
+{
+  "name": "video-lib",
+  "private": true,
+  "workspaces": [
+    "packages/*",
+    "apps/*"
+  ],
+  "scripts": {
+    "dev": "npm run dev --workspace=@video-lib/web",
+    "build": "npm run build --workspace=@video-lib/web",
+    "lint": "npm run lint --workspace=@video-lib/web"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}
