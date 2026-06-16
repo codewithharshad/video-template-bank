@@ -1,5 +1,6 @@
 import type { HookTemplate } from "@video-lib/template-sdk";
 import { coerceTemplateProps } from "@/lib/coerce-props";
+import { withTransparentBackground } from "@/lib/transparent-export";
 import { getComposition } from "@/remotion";
 
 export type ExportFormat = "mp4" | "webm-alpha";
@@ -45,7 +46,7 @@ function prepareExportProps(
   format: ExportFormat
 ): Record<string, string | number> {
   if (format !== "webm-alpha") return inputProps;
-  return { ...inputProps, backgroundColor: "transparent" };
+  return withTransparentBackground(inputProps);
 }
 
 function downloadBlob(blob: Blob, filename: string) {
@@ -111,6 +112,8 @@ export async function exportVideo(options: ExportOptions): Promise<void> {
     container,
     videoCodec,
     transparent: isAlpha,
+    // Higher bitrate keeps alpha edges clean in editors (CapCut, Premiere, etc.)
+    videoBitrate: isAlpha ? "very-high" : "medium",
     muted: true,
     onProgress: (progress) => {
       onProgress?.(progress.progress);
@@ -118,8 +121,9 @@ export async function exportVideo(options: ExportOptions): Promise<void> {
   });
 
   const blob = await getBlob();
-  const ext = isAlpha ? "webm" : "mp4";
-  const filename = `hookforge-${template.slug}-${Date.now()}.${ext}`;
+  const filename = isAlpha
+    ? `hookforge-${template.slug}-transparent-${Date.now()}.webm`
+    : `hookforge-${template.slug}-${Date.now()}.mp4`;
   downloadBlob(blob, filename);
 }
 

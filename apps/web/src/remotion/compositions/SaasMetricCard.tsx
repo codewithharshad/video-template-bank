@@ -118,20 +118,27 @@ export const SaasMetricCard: React.FC<SaasMetricCardProps> = ({
             style={{
               marginTop: 20,
               height: 8,
-              borderRadius: 999,
-              background: "rgba(255,255,255,0.08)",
+              borderRadius: 4,
+              background: transparent ? undefined : "rgba(255,255,255,0.08)",
+              border: transparent ? `1px solid ${primaryColor}30` : undefined,
               overflow: "hidden",
+              position: "relative",
             }}
           >
             <div
               style={{
+                position: "absolute",
+                left: 0,
+                top: 0,
+                width: "100%",
                 height: "100%",
-                width: `${interpolate(frame, [20, 80], [0, 72], {
+                background: `linear-gradient(90deg, ${primaryColor}, ${accentColor})`,
+                borderRadius: 4,
+                transform: `scaleX(${interpolate(frame, [20, 80], [0, 0.72], {
                   extrapolateLeft: "clamp",
                   extrapolateRight: "clamp",
-                })}%`,
-                background: `linear-gradient(90deg, ${primaryColor}, ${accentColor})`,
-                borderRadius: 999,
+                })})`,
+                transformOrigin: "left center",
               }}
             />
           </div>

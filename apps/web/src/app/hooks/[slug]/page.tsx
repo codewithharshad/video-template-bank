@@ -16,6 +16,7 @@ import { PropsEditor } from "@/components/props-editor";
 import { ExportPanel } from "@/components/export-panel";
 import { BrandKitPanel } from "@/components/brand-kit-panel";
 import { useBrand } from "@/components/brand-provider";
+import { withTransparentBackground } from "@/lib/transparent-export";
 
 export default function HookEditorPage({
   params,
@@ -34,6 +35,7 @@ export default function HookEditorPage({
   const [props, setProps] = useState<Record<string, string | number> | null>(
     initialProps
   );
+  const [transparentExport, setTransparentExport] = useState(false);
 
   useEffect(() => {
     if (template) {
@@ -44,6 +46,10 @@ export default function HookEditorPage({
   if (!template || !props) {
     notFound();
   }
+
+  const previewProps = transparentExport
+    ? withTransparentBackground(props)
+    : props;
 
   return (
     <div className="mx-auto max-w-7xl px-4 py-6 sm:px-6">
@@ -82,9 +88,9 @@ export default function HookEditorPage({
         <div className="glass flex min-h-[480px] items-center justify-center rounded-2xl p-6 sm:p-10">
           <div className="w-full max-w-sm">
             <TemplatePreview
-              key={slug}
+              key={`${slug}-${transparentExport ? "alpha" : "solid"}`}
               template={template}
-              inputProps={props}
+              inputProps={previewProps}
             />
           </div>
         </div>
@@ -96,7 +102,12 @@ export default function HookEditorPage({
             onChange={setProps}
           />
           <BrandKitPanel />
-          <ExportPanel template={template} inputProps={props} />
+          <ExportPanel
+            template={template}
+            inputProps={props}
+            transparent={transparentExport}
+            onTransparentChange={setTransparentExport}
+          />
         </div>
       </div>
     </div>

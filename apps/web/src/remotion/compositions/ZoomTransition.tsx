@@ -3,7 +3,7 @@ import {
   interpolate,
   useCurrentFrame,
 } from "remotion";
-import { resolveBg } from "../lib/background";
+import { isTransparentBg, resolveBg } from "../lib/background";
 
 export interface ZoomTransitionProps {
   text: string;
@@ -17,6 +17,7 @@ export const ZoomTransition: React.FC<ZoomTransitionProps> = ({
   backgroundColor,
 }) => {
   const frame = useCurrentFrame();
+  const transparent = isTransparentBg(backgroundColor);
 
   const zoom = interpolate(frame, [0, 15, 30, 45], [1, 3, 3, 0.5], {
     extrapolateLeft: "clamp",
@@ -36,14 +37,16 @@ export const ZoomTransition: React.FC<ZoomTransitionProps> = ({
         alignItems: "center",
       }}
     >
-      <div
-        style={{
-          position: "absolute",
-          inset: 0,
-          backgroundColor: "#fff",
-          opacity: flash * 0.8,
-        }}
-      />
+      {!transparent && (
+        <div
+          style={{
+            position: "absolute",
+            inset: 0,
+            backgroundColor: "#fff",
+            opacity: flash * 0.8,
+          }}
+        />
+      )}
       <span
         style={{
           fontSize: 96,

@@ -17,6 +17,22 @@ npm run dev
 
 Open [http://localhost:3000](http://localhost:3000).
 
+If port 3000 is busy, stop the old process first:
+
+```bash
+lsof -ti :3000 | xargs kill -9
+npm run dev
+```
+
+## Troubleshooting
+
+**Blank preview / can't play:** Hard-refresh the page (Cmd+Shift+R). The preview loads client-side — wait for "Loading preview..." to finish, then use the player controls or click the video to play.
+
+**404 Template not found:** You're likely on a stale dev server. Kill port 3000 and restart from `video-lib/`.
+
+**Export disabled or fails:** Use **Chrome** and export as **MP4** first. WebM+Alpha needs VP9 support (Safari often lacks this).
+
+
 ## Project structure
 
 ```

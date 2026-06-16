@@ -60,9 +60,12 @@ export const GradientTextReveal: React.FC<GradientTextRevealProps> = ({
           style={{
             fontSize: 64,
             fontWeight: 800,
-            background: `linear-gradient(135deg, ${primaryColor}, ${accentColor})`,
-            WebkitBackgroundClip: "text",
-            WebkitTextFillColor: "transparent",
+            color: transparent ? accentColor : undefined,
+            background: transparent
+              ? undefined
+              : `linear-gradient(135deg, ${primaryColor}, ${accentColor})`,
+            WebkitBackgroundClip: transparent ? undefined : "text",
+            WebkitTextFillColor: transparent ? undefined : "transparent",
             fontFamily: "Inter, system-ui, sans-serif",
             lineHeight: 1.15,
             margin: 0,

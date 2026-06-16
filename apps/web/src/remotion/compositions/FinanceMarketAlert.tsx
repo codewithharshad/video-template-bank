@@ -5,7 +5,7 @@ import {
   useCurrentFrame,
   useVideoConfig,
 } from "remotion";
-import { resolveBg } from "../lib/background";
+import { isTransparentBg, resolveBg } from "../lib/background";
 
 export interface FinanceMarketAlertProps {
   ticker: string;
@@ -26,6 +26,7 @@ export const FinanceMarketAlert: React.FC<FinanceMarketAlertProps> = ({
 }) => {
   const frame = useCurrentFrame();
   const { fps } = useVideoConfig();
+  const transparent = isTransparentBg(backgroundColor);
   const isUp = changePercent >= 0;
   const alertColor = isUp ? "#22c55e" : "#ef4444";
 
@@ -52,8 +53,8 @@ export const FinanceMarketAlert: React.FC<FinanceMarketAlertProps> = ({
             gap: 10,
             padding: "8px 16px",
             borderRadius: 999,
-            background: `${alertColor}20`,
-            border: `1px solid ${alertColor}50`,
+            background: transparent ? undefined : `${alertColor}20`,
+            border: transparent ? `1px solid ${alertColor}` : `1px solid ${alertColor}50`,
             marginBottom: 24,
             opacity: interpolate(frame, [0, 10], [0, 1], {
               extrapolateLeft: "clamp",
@@ -67,7 +68,7 @@ export const FinanceMarketAlert: React.FC<FinanceMarketAlertProps> = ({
               height: 10,
               borderRadius: "50%",
               background: alertColor,
-              boxShadow: `0 0 12px ${alertColor}`,
+              boxShadow: transparent ? undefined : `0 0 12px ${alertColor}`,
             }}
           />
           <span
@@ -107,8 +108,8 @@ export const FinanceMarketAlert: React.FC<FinanceMarketAlertProps> = ({
             justifyContent: "space-between",
             padding: "28px 32px",
             borderRadius: 16,
-            border: "1px solid rgba(255,255,255,0.1)",
-            background: "rgba(255,255,255,0.03)",
+            border: transparent ? `1px solid ${accentColor}40` : "1px solid rgba(255,255,255,0.1)",
+            background: transparent ? undefined : "rgba(255,255,255,0.03)",
             transform: `scale(${pulse})`,
           }}
         >

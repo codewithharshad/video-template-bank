@@ -3,7 +3,7 @@ import {
   interpolate,
   useCurrentFrame,
 } from "remotion";
-import { resolveBg } from "../lib/background";
+import { isTransparentBg, resolveBg } from "../lib/background";
 
 export interface QuoteSpotlightProps {
   quote: string;
@@ -19,6 +19,7 @@ export const QuoteSpotlight: React.FC<QuoteSpotlightProps> = ({
   backgroundColor = "#09090b",
 }) => {
   const frame = useCurrentFrame();
+  const transparent = isTransparentBg(backgroundColor);
 
   const spotlightOpacity = interpolate(frame, [0, 20, 80, 100], [0, 0.6, 0.6, 0.3], {
     extrapolateLeft: "clamp",
@@ -34,17 +35,19 @@ export const QuoteSpotlight: React.FC<QuoteSpotlightProps> = ({
         padding: 80,
       }}
     >
-      <div
-        style={{
-          position: "absolute",
-          width: 600,
-          height: 600,
-          borderRadius: "50%",
-          background: `radial-gradient(circle, ${accentColor}40 0%, transparent 70%)`,
-          opacity: spotlightOpacity,
-          filter: "blur(40px)",
-        }}
-      />
+      {!transparent && (
+        <div
+          style={{
+            position: "absolute",
+            width: 600,
+            height: 600,
+            borderRadius: "50%",
+            background: `radial-gradient(circle, ${accentColor}40 0%, transparent 70%)`,
+            opacity: spotlightOpacity,
+            filter: "blur(40px)",
+          }}
+        />
+      )}
 
       <div style={{ textAlign: "center", position: "relative", zIndex: 1, maxWidth: 800 }}>
         <p

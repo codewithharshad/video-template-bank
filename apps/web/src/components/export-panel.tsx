@@ -2,7 +2,14 @@
 
 import { useEffect, useState } from "react";
 import type { HookTemplate } from "@video-lib/template-sdk";
-import { AlertCircle, CheckCircle2, Download, Film, Layers, X } from "lucide-react";
+import {
+  AlertCircle,
+  CheckCircle2,
+  Download,
+  Layers,
+  Sparkles,
+  X,
+} from "lucide-react";
 import {
   exportVideo,
   checkExportSupport,
@@ -13,39 +20,47 @@ import {
 interface ExportPanelProps {
   template: HookTemplate;
   inputProps: Record<string, string | number>;
+  transparent: boolean;
+  onTransparentChange: (value: boolean) => void;
 }
 
-export function ExportPanel({ template, inputProps }: ExportPanelProps) {
-  const [format, setFormat] = useState<ExportFormat>("mp4");
+export function ExportPanel({
+  template,
+  inputProps,
+  transparent,
+  onTransparentChange,
+}: ExportPanelProps) {
+  const format: ExportFormat = transparent ? "webm-alpha" : "mp4";
   const [resolution, setResolution] = useState<ExportResolution>("1080p");
   const [exporting, setExporting] = useState(false);
   const [progress, setProgress] = useState(0);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState(false);
-  const [browserWarning, setBrowserWarning] = useState<string | null>(null);
+  const [alphaWarning, setAlphaWarning] = useState<string | null>(null);
 
   useEffect(() => {
+    if (!transparent) {
+      setAlphaWarning(null);
+      return;
+    }
     let cancelled = false;
-    checkExportSupport(format, template.width, template.height).then((result) => {
-      if (!cancelled) {
-        setBrowserWarning(result.supported ? null : result.message ?? null);
+    checkExportSupport("webm-alpha", template.width, template.height).then(
+      (result) => {
+        if (!cancelled) {
+          setAlphaWarning(result.supported ? null : result.message ?? null);
+        }
       }
-    });
+    );
     return () => {
       cancelled = true;
     };
-  }, [format, template.width, template.height]);
-
-  const exportBlocked =
-    format === "webm-alpha" && !!browserWarning && !exporting;
+  }, [transparent, template.width, template.height]);
 
   const handleExport = async () => {
     setExporting(true);
     setProgress(0);
     setError(null);
     setSuccess(false);
-
-    const controller = new AbortController();
 
     try {
       await exportVideo({
@@ -54,7 +69,6 @@ export function ExportPanel({ template, inputProps }: ExportPanelProps) {
         format,
         resolution,
         onProgress: setProgress,
-        signal: controller.signal,
       });
       setSuccess(true);
       setTimeout(() => setSuccess(false), 4000);
@@ -76,42 +90,46 @@ export function ExportPanel({ template, inputProps }: ExportPanelProps) {
       </div>
 
       <div className="space-y-4">
-        <div>
-          <label className="mb-2 block text-xs text-zinc-500">Format</label>
-          <div className="grid grid-cols-2 gap-2">
-            <button
-              type="button"
-              onClick={() => setFormat("mp4")}
-              disabled={exporting}
-              className={`flex flex-col items-start rounded-lg border px-3 py-2.5 text-sm transition-colors disabled:opacity-50 ${
-                format === "mp4"
-                  ? "border-violet-500 bg-violet-500/10 text-violet-300"
-                  : "border-zinc-800 text-zinc-400 hover:border-zinc-700"
-              }`}
-            >
-              <Film className="mb-1 h-4 w-4" />
-              MP4
-            </button>
-            <button
-              type="button"
-              onClick={() => setFormat("webm-alpha")}
-              disabled={exporting}
-              className={`flex flex-col items-start rounded-lg border px-3 py-2.5 text-sm transition-colors disabled:opacity-50 ${
-                format === "webm-alpha"
-                  ? "border-violet-500 bg-violet-500/10 text-violet-300"
-                  : "border-zinc-800 text-zinc-400 hover:border-zinc-700"
-              }`}
-            >
-              <Layers className="mb-1 h-4 w-4" />
-              WebM + Alpha
-            </button>
+        {/* Transparent background — primary option */}
+        <button
+          type="button"
+          onClick={() => onTransparentChange(!transparent)}
+          disabled={exporting}
+          className={`flex w-full items-start gap-3 rounded-xl border p-4 text-left transition-colors disabled:opacity-50 ${
+            transparent
+              ? "border-emerald-500/50 bg-emerald-500/10"
+              : "border-zinc-800 bg-zinc-900/40 hover:border-zinc-700"
+          }`}
+        >
+          <div
+            className={`mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-md border ${
+              transparent
+                ? "border-emerald-500 bg-emerald-500 text-black"
+                : "border-zinc-600 bg-zinc-800"
+            }`}
+          >
+            {transparent && <Sparkles className="h-3 w-3" />}
           </div>
-          {format === "webm-alpha" && (
-            <p className="mt-2 text-xs text-emerald-400/80">
-              Transparent background — composite in Premiere, DaVinci, or CapCut.
+          <div>
+            <div className="flex items-center gap-2">
+              <Layers className="h-4 w-4 text-emerald-400" />
+              <span className="font-medium text-zinc-100">
+                Transparent background
+              </span>
+            </div>
+            <p className="mt-1 text-xs text-zinc-400">
+              No blue/black backdrop — drop text & graphics over your footage in
+              Premiere, DaVinci, or CapCut. Exports as WebM.
             </p>
-          )}
-        </div>
+          </div>
+        </button>
+
+        {!transparent && (
+          <p className="text-xs text-zinc-500">
+            MP4 export includes the solid/gradient background. Enable transparent
+            above to composite over your own video.
+          </p>
+        )}
 
         <div>
           <label className="mb-2 block text-xs text-zinc-500">Resolution</label>
@@ -130,18 +148,17 @@ export function ExportPanel({ template, inputProps }: ExportPanelProps) {
 
         <div className="rounded-lg bg-zinc-900/80 p-3 text-xs text-zinc-500">
           <p>
-            {template.width}×{template.height} · {template.fps}fps ·{" "}
+            {transparent ? "WebM + alpha" : "MP4"} · {template.width}×
+            {template.height} · {template.fps}fps ·{" "}
             {(template.durationInFrames / template.fps).toFixed(1)}s
           </p>
         </div>
 
-        {browserWarning && (
+        {alphaWarning && transparent && (
           <div className="flex gap-2 rounded-lg border border-amber-500/30 bg-amber-500/10 p-3 text-xs text-amber-200">
             <AlertCircle className="mt-0.5 h-4 w-4 shrink-0" />
             <span>
-              {format === "mp4"
-                ? `Note: ${browserWarning} — export may still work; try MP4 first.`
-                : browserWarning}
+              {alphaWarning} — try Chrome, or disable transparent for MP4.
             </span>
           </div>
         )}
@@ -171,14 +188,16 @@ export function ExportPanel({ template, inputProps }: ExportPanelProps) {
         {success && (
           <div className="flex items-center gap-2 rounded-lg border border-emerald-500/30 bg-emerald-500/10 p-3 text-xs text-emerald-300">
             <CheckCircle2 className="h-4 w-4 shrink-0" />
-            Download started — check your downloads folder.
+            {transparent
+              ? "Transparent WebM downloaded — import into your editor."
+              : "MP4 downloaded — check your downloads folder."}
           </div>
         )}
 
         <button
           type="button"
           onClick={handleExport}
-          disabled={exporting || exportBlocked}
+          disabled={exporting || (transparent && !!alphaWarning)}
           className="flex w-full items-center justify-center gap-2 rounded-xl bg-violet-600 py-3 font-medium text-white transition-colors hover:bg-violet-500 disabled:cursor-not-allowed disabled:opacity-60"
         >
           <Download className="h-4 w-4" />
@@ -186,11 +205,15 @@ export function ExportPanel({ template, inputProps }: ExportPanelProps) {
             ? "Rendering..."
             : success
               ? "Exported!"
-              : "Export video"}
+              : transparent
+                ? "Export transparent WebM"
+                : "Export MP4"}
         </button>
 
-        <p className="text-center text-xs text-zinc-600">
-          Use Chrome for best results · Renders locally in your browser
+        <p className="mt-2 text-center text-xs text-zinc-500">
+          {transparent
+            ? "Checkerboard in preview = transparent areas. In CapCut, place the clip on a track above your footage."
+            : "Use Chrome for best results"}
         </p>
       </div>
     </div>

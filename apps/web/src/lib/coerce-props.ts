@@ -1,5 +1,13 @@
 import type { HookTemplate } from "@video-lib/template-sdk";
 
+export function getDefaultTemplateProps(
+  template: HookTemplate
+): Record<string, string | number> {
+  return Object.fromEntries(
+    template.props.map((field) => [field.key, field.defaultValue])
+  );
+}
+
 /** Ensure Remotion compositions receive the prop types they expect. */
 export function coerceTemplateProps(
   template: HookTemplate,

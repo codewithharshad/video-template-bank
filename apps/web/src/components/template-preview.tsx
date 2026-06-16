@@ -4,6 +4,7 @@ import dynamic from "next/dynamic";
 import type { HookTemplate } from "@video-lib/template-sdk";
 import { Play } from "lucide-react";
 import { Component, type ReactNode } from "react";
+import { isTransparentProps } from "@/lib/transparent-export";
 
 function PreviewSkeleton() {
   return (
@@ -65,11 +66,42 @@ export function TemplatePreview({
   inputProps,
   className,
 }: TemplatePreviewProps) {
+  const transparent = isTransparentProps(inputProps);
+
   return (
     <div className={className}>
-      <PreviewErrorBoundary>
-        <RemotionPlayerInner template={template} inputProps={inputProps} />
-      </PreviewErrorBoundary>
+      {transparent && (
+        <p className="mb-2 text-center text-xs text-emerald-400">
+          Transparent preview — checkerboard = no background
+        </p>
+      )}
+      <div
+        className="overflow-hidden rounded-xl"
+        style={
+          transparent
+            ? {
+                backgroundImage: `
+                  linear-gradient(45deg, #3f3f46 25%, transparent 25%),
+                  linear-gradient(-45deg, #3f3f46 25%, transparent 25%),
+                  linear-gradient(45deg, transparent 75%, #3f3f46 75%),
+                  linear-gradient(-45deg, transparent 75%, #3f3f46 75%)
+                `,
+                backgroundSize: "20px 20px",
+                backgroundPosition: "0 0, 0 10px, 10px -10px, -10px 0px",
+                backgroundColor: "#27272a",
+              }
+            : undefined
+        }
+      >
+        <PreviewErrorBoundary>
+          <RemotionPlayerInner template={template} inputProps={inputProps} />
+        </PreviewErrorBoundary>
+      </div>
+      {transparent && (
+        <p className="mt-2 text-center text-xs text-zinc-500">
+          Export as WebM to keep transparency in your editor
+        </p>
+      )}
     </div>
   );
 }

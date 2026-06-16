@@ -5,7 +5,7 @@ import {
   useCurrentFrame,
   useVideoConfig,
 } from "remotion";
-import { resolveBg } from "../lib/background";
+import { isTransparentBg, resolveBg, textGlow } from "../lib/background";
 
 export interface CounterRevealProps {
   value: number;
@@ -24,6 +24,7 @@ export const CounterReveal: React.FC<CounterRevealProps> = ({
 }) => {
   const frame = useCurrentFrame();
   const { fps } = useVideoConfig();
+  const transparent = isTransparentBg(backgroundColor);
 
   const countProgress = interpolate(frame, [10, 70], [0, 1], {
     extrapolateLeft: "clamp",
@@ -55,7 +56,7 @@ export const CounterReveal: React.FC<CounterRevealProps> = ({
             transform: `scale(${scale})`,
             fontFamily: "Inter, system-ui, sans-serif",
             lineHeight: 1,
-            textShadow: `0 0 80px ${accentColor}40`,
+            textShadow: textGlow(accentColor, transparent),
           }}
         >
           {displayValue}
