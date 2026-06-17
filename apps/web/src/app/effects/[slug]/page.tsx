@@ -3,7 +3,7 @@
 import { use } from "react";
 import { TemplateEditor } from "@/components/template-editor";
 
-export default function HookEditorPage({
+export default function EffectEditorPage({
   params,
 }: {
   params: Promise<{ slug: string }>;
@@ -12,8 +12,8 @@ export default function HookEditorPage({
   return (
     <TemplateEditor
       slug={slug}
-      backHref="/hooks"
-      backLabel="Back to hooks"
+      backHref="/effects"
+      backLabel="Back to effects"
     />
   );
 }

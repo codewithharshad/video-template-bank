@@ -4,12 +4,14 @@ import { Search, SlidersHorizontal, X } from "lucide-react";
 import {
   CATEGORY_LABELS,
   CREATOR_LABELS,
+  PLATFORM_LABELS,
   STYLE_LABELS,
   type FilterState,
   type TemplateCategory,
   type VisualStyle,
   type CreatorStyle,
   type Orientation,
+  type Platform,
 } from "@video-lib/template-sdk";
 import { cn } from "@/lib/utils";
 
@@ -19,6 +21,7 @@ interface FilterSidebarProps {
   resultCount: number;
   mobileOpen: boolean;
   onMobileClose: () => void;
+  showPlatforms?: boolean;
 }
 
 function FilterSection({
@@ -73,6 +76,7 @@ export function FilterSidebar({
   resultCount,
   mobileOpen,
   onMobileClose,
+  showPlatforms = false,
 }: FilterSidebarProps) {
   const content = (
     <div className="space-y-8">
@@ -88,6 +92,8 @@ export function FilterSidebar({
               categories: [],
               visualStyles: [],
               creatorStyles: [],
+              platforms: [],
+              templateKind: filters.templateKind,
               orientation: null,
               search: filters.search,
               sort: filters.sort,
@@ -114,6 +120,24 @@ export function FilterSidebar({
           />
         ))}
       </FilterSection>
+
+      {showPlatforms && (
+        <FilterSection title="Platform">
+          {(Object.keys(PLATFORM_LABELS) as Platform[]).map((platform) => (
+            <FilterChip
+              key={platform}
+              label={PLATFORM_LABELS[platform]}
+              active={filters.platforms.includes(platform)}
+              onClick={() =>
+                onChange({
+                  ...filters,
+                  platforms: toggleItem(filters.platforms, platform),
+                })
+              }
+            />
+          ))}
+        </FilterSection>
+      )}
 
       <FilterSection title="Visual Style">
         {(Object.keys(STYLE_LABELS) as VisualStyle[]).map((style) => (

@@ -16,10 +16,10 @@ export function Header() {
 
         <nav className="hidden items-center gap-8 text-sm text-zinc-400 md:flex">
           <Link href="/hooks" className="transition-colors hover:text-white">
-            Templates
+            Hooks
           </Link>
-          <Link href="/hooks" className="transition-colors hover:text-white">
-            Brand Kit
+          <Link href="/effects" className="transition-colors hover:text-white">
+            Video Effects
           </Link>
           <span className="text-zinc-600">Pricing</span>
         </nav>

@@ -12,9 +12,11 @@ import {
 } from "lucide-react";
 import {
   exportVideo,
-  checkExportSupport,
+  getExportDimensions,
+  resolveExportConfig,
   type ExportFormat,
   type ExportResolution,
+  type ResolvedExportConfig,
 } from "@/lib/export-video";
 
 interface ExportPanelProps {
@@ -36,25 +38,26 @@ export function ExportPanel({
   const [progress, setProgress] = useState(0);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState(false);
-  const [alphaWarning, setAlphaWarning] = useState<string | null>(null);
+  const [resolvedConfig, setResolvedConfig] = useState<ResolvedExportConfig | null>(null);
+  const [unsupportedMessage, setUnsupportedMessage] = useState<string | null>(null);
 
   useEffect(() => {
-    if (!transparent) {
-      setAlphaWarning(null);
-      return;
-    }
     let cancelled = false;
-    checkExportSupport("webm-alpha", template.width, template.height).then(
-      (result) => {
-        if (!cancelled) {
-          setAlphaWarning(result.supported ? null : result.message ?? null);
-        }
+    const { width, height } = getExportDimensions(template, resolution);
+    resolveExportConfig(format, width, height).then((result) => {
+      if (cancelled) return;
+      if (result.supported && result.resolved) {
+        setResolvedConfig(result.resolved);
+        setUnsupportedMessage(null);
+      } else {
+        setResolvedConfig(null);
+        setUnsupportedMessage(result.message ?? "Export not supported in this browser.");
       }
-    );
+    });
     return () => {
       cancelled = true;
     };
-  }, [transparent, template.width, template.height]);
+  }, [format, template, resolution]);
 
   const handleExport = async () => {
     setExporting(true);
@@ -63,13 +66,14 @@ export function ExportPanel({
     setSuccess(false);
 
     try {
-      await exportVideo({
+      const used = await exportVideo({
         template,
         inputProps,
         format,
         resolution,
         onProgress: setProgress,
       });
+      setResolvedConfig(used);
       setSuccess(true);
       setTimeout(() => setSuccess(false), 4000);
     } catch (err) {
@@ -82,6 +86,11 @@ export function ExportPanel({
     }
   };
 
+  const willFallbackToWebm =
+    !transparent &&
+    resolvedConfig?.extension === "webm" &&
+    resolvedConfig.container === "webm";
+
   return (
     <div className="glass rounded-2xl p-5">
       <div className="mb-4 flex items-center gap-2">
@@ -90,7 +99,6 @@ export function ExportPanel({
       </div>
 
       <div className="space-y-4">
-        {/* Transparent background — primary option */}
         <button
           type="button"
           onClick={() => onTransparentChange(!transparent)}
@@ -118,16 +126,16 @@ export function ExportPanel({
               </span>
             </div>
             <p className="mt-1 text-xs text-zinc-400">
-              No blue/black backdrop — drop text & graphics over your footage in
-              Premiere, DaVinci, or CapCut. Exports as WebM.
+              No backdrop — drop over your footage in Premiere, DaVinci, or CapCut.
+              Exports as WebM with alpha.
             </p>
           </div>
         </button>
 
         {!transparent && (
           <p className="text-xs text-zinc-500">
-            MP4 export includes the solid/gradient background. Enable transparent
-            above to composite over your own video.
+            Solid export includes the background. Your browser may receive WebM
+            instead of MP4 if H.264 encoding isn&apos;t available.
           </p>
         )}
 
@@ -148,17 +156,27 @@ export function ExportPanel({
 
         <div className="rounded-lg bg-zinc-900/80 p-3 text-xs text-zinc-500">
           <p>
-            {transparent ? "WebM + alpha" : "MP4"} · {template.width}×
-            {template.height} · {template.fps}fps ·{" "}
+            {resolvedConfig?.label ?? (transparent ? "WebM + alpha" : "MP4")} ·{" "}
+            {template.width}×{template.height} · {template.fps}fps ·{" "}
             {(template.durationInFrames / template.fps).toFixed(1)}s
           </p>
         </div>
 
-        {alphaWarning && transparent && (
+        {willFallbackToWebm && (
           <div className="flex gap-2 rounded-lg border border-amber-500/30 bg-amber-500/10 p-3 text-xs text-amber-200">
             <AlertCircle className="mt-0.5 h-4 w-4 shrink-0" />
             <span>
-              {alphaWarning} — try Chrome, or disable transparent for MP4.
+              H.264/MP4 isn&apos;t available in this browser — export will use{" "}
+              {resolvedConfig.label} instead. Chrome gives the widest codec support.
+            </span>
+          </div>
+        )}
+
+        {unsupportedMessage && (
+          <div className="flex gap-2 rounded-lg border border-red-500/30 bg-red-500/10 p-3 text-xs text-red-300">
+            <AlertCircle className="mt-0.5 h-4 w-4 shrink-0" />
+            <span>
+              {unsupportedMessage} Try Chrome 94+, or enable transparent export.
             </span>
           </div>
         )}
@@ -188,16 +206,16 @@ export function ExportPanel({
         {success && (
           <div className="flex items-center gap-2 rounded-lg border border-emerald-500/30 bg-emerald-500/10 p-3 text-xs text-emerald-300">
             <CheckCircle2 className="h-4 w-4 shrink-0" />
-            {transparent
-              ? "Transparent WebM downloaded — import into your editor."
-              : "MP4 downloaded — check your downloads folder."}
+            {resolvedConfig?.transparent
+              ? `Transparent ${resolvedConfig.extension.toUpperCase()} downloaded — import into your editor.`
+              : `${resolvedConfig?.extension.toUpperCase() ?? "File"} downloaded — check your downloads folder.`}
           </div>
         )}
 
         <button
           type="button"
           onClick={handleExport}
-          disabled={exporting || (transparent && !!alphaWarning)}
+          disabled={exporting || !!unsupportedMessage}
           className="flex w-full items-center justify-center gap-2 rounded-xl bg-violet-600 py-3 font-medium text-white transition-colors hover:bg-violet-500 disabled:cursor-not-allowed disabled:opacity-60"
         >
           <Download className="h-4 w-4" />
@@ -207,13 +225,15 @@ export function ExportPanel({
               ? "Exported!"
               : transparent
                 ? "Export transparent WebM"
-                : "Export MP4"}
+                : resolvedConfig?.extension === "webm"
+                  ? "Export WebM"
+                  : "Export MP4"}
         </button>
 
         <p className="mt-2 text-center text-xs text-zinc-500">
           {transparent
-            ? "Checkerboard in preview = transparent areas. In CapCut, place the clip on a track above your footage."
-            : "Use Chrome for best results"}
+            ? "Checkerboard in preview = transparent areas."
+            : "Chrome recommended for MP4. Other browsers auto-fallback to WebM."}
         </p>
       </div>
     </div>

@@ -6,7 +6,31 @@ export type TemplateCategory =
   | "animated-flowchart"
   | "logo-animation"
   | "transitions"
-  | "ui-animation";
+  | "ui-animation"
+  | "social-overlay"
+  | "subscribe-banner"
+  | "comment-popup"
+  | "profile-banner"
+  | "chat-mockup"
+  | "search-bar"
+  | "notification";
+
+export type TemplateKind = "hook" | "overlay";
+
+export type OverlayPlatform =
+  | "youtube"
+  | "instagram"
+  | "tiktok"
+  | "twitch"
+  | "kick"
+  | "discord"
+  | "twitter"
+  | "threads"
+  | "reddit"
+  | "whatsapp"
+  | "imessage"
+  | "browser"
+  | "generic";
 
 export type VisualStyle =
   | "minimal"
@@ -24,7 +48,17 @@ export type CreatorStyle =
   | "saas"
   | "viral-reels";
 
-export type Platform = "tiktok" | "youtube" | "linkedin" | "instagram";
+export type Platform =
+  | "tiktok"
+  | "youtube"
+  | "linkedin"
+  | "instagram"
+  | "twitch"
+  | "kick"
+  | "discord"
+  | "twitter"
+  | "threads"
+  | "reddit";
 
 export type PropFieldType = "text" | "color" | "number" | "image";
 
@@ -42,6 +76,8 @@ export interface HookTemplate {
   slug: string;
   name: string;
   description: string;
+  templateKind?: TemplateKind;
+  overlayPlatform?: OverlayPlatform;
   compositionId: string;
   durationInFrames: number;
   fps: number;
@@ -76,6 +112,8 @@ export interface FilterState {
   categories: TemplateCategory[];
   visualStyles: VisualStyle[];
   creatorStyles: CreatorStyle[];
+  platforms: Platform[];
+  templateKind: TemplateKind | null;
   orientation: Orientation | null;
   search: string;
   sort: "newest" | "popular";

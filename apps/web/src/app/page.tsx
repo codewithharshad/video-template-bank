@@ -36,8 +36,8 @@ const features = [
 ];
 
 const stats = [
-  { value: "9+", label: "Launch templates" },
-  { value: "<3s", label: "Avg hook length" },
+  { value: "30+", label: "Templates & effects" },
+  { value: "<3s", label: "Avg overlay length" },
   { value: "0", label: "After Effects needed" },
 ];
 
@@ -64,23 +64,23 @@ export default function HomePage() {
             </h1>
 
             <p className="mt-6 text-lg text-zinc-400 sm:text-xl">
-              Browse pro motion graphics templates, customize with your brand,
-              and export with alpha transparency — no After Effects required.
+              Browse viral hooks and social media overlays — subscribe banners,
+              comment popups, profile cards. Customize and export with alpha transparency.
             </p>
 
             <div className="mt-10 flex flex-col items-center justify-center gap-4 sm:flex-row">
               <Link
-                href="/hooks"
+                href="/effects"
                 className="inline-flex items-center gap-2 rounded-full bg-violet-600 px-8 py-3.5 font-medium text-white transition-colors hover:bg-violet-500"
               >
-                Browse templates
+                Browse video effects
                 <ArrowRight className="h-4 w-4" />
               </Link>
               <Link
-                href="/hooks/bold-title-hook"
+                href="/hooks"
                 className="inline-flex items-center gap-2 rounded-full border border-zinc-700 px-8 py-3.5 font-medium text-zinc-300 transition-colors hover:border-zinc-600 hover:text-white"
               >
-                Try live editor
+                Browse hooks
               </Link>
             </div>
 
@@ -131,10 +131,10 @@ export default function HomePage() {
             Free templates available. No credit card required.
           </p>
           <Link
-            href="/hooks"
+            href="/effects"
             className="mt-8 inline-flex items-center gap-2 rounded-full bg-violet-600 px-8 py-3.5 font-medium text-white transition-colors hover:bg-violet-500"
           >
-            Open template library
+            Open video effects library
             <ArrowRight className="h-4 w-4" />
           </Link>
         </div>

@@ -6,12 +6,13 @@ import { TemplateCardPreview } from "@/components/template-card-preview";
 
 interface TemplateCardProps {
   template: HookTemplate;
+  basePath?: string;
 }
 
-export function TemplateCard({ template }: TemplateCardProps) {
+export function TemplateCard({ template, basePath = "/hooks" }: TemplateCardProps) {
   return (
     <Link
-      href={`/hooks/${template.slug}`}
+      href={`${basePath}/${template.slug}`}
       className="group relative flex flex-col overflow-hidden rounded-xl border border-zinc-800/80 bg-zinc-900/40 transition-all hover:border-violet-500/40 hover:bg-zinc-900/70 hover:shadow-lg hover:shadow-violet-500/5"
     >
       <div className="relative flex justify-center bg-zinc-950/50 px-3 pb-2 pt-3">

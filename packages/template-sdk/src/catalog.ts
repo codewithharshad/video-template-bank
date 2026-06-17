@@ -1,4 +1,5 @@
 import type { HookTemplate } from "./types";
+import { OVERLAY_CATALOG } from "./overlay-catalog";
 
 export const DEFAULT_BRAND = {
   name: "My Brand",
@@ -8,11 +9,12 @@ export const DEFAULT_BRAND = {
   fontFamily: "Inter",
 };
 
-export const TEMPLATE_CATALOG: HookTemplate[] = [
+export const HOOK_CATALOG: HookTemplate[] = [
   {
     id: "1",
     slug: "bold-title-hook",
     name: "Bold Title Hook",
+    templateKind: "hook",
     description:
       "High-impact kinetic title with staggered word reveal. Perfect for cold opens and pattern interrupts.",
     compositionId: "BoldTitleHook",
@@ -276,6 +278,11 @@ export const TEMPLATE_CATALOG: HookTemplate[] = [
   },
 ];
 
+export const TEMPLATE_CATALOG: HookTemplate[] = [
+  ...HOOK_CATALOG.map((t) => ({ ...t, templateKind: t.templateKind ?? "hook" as const })),
+  ...OVERLAY_CATALOG,
+];
+
 export function getTemplateBySlug(slug: string): HookTemplate | undefined {
   return TEMPLATE_CATALOG.find((t) => t.slug === slug);
 }
@@ -307,6 +314,8 @@ export function filterTemplates(
     categories?: string[];
     visualStyles?: string[];
     creatorStyles?: string[];
+    platforms?: string[];
+    templateKind?: string | null;
     orientation?: string | null;
     search?: string;
     sort?: "newest" | "popular";
@@ -314,9 +323,19 @@ export function filterTemplates(
 ): HookTemplate[] {
   let result = [...templates];
 
+  if (filters.templateKind) {
+    result = result.filter(
+      (t) => (t.templateKind ?? "hook") === filters.templateKind
+    );
+  }
   if (filters.categories?.length) {
     result = result.filter((t) =>
       t.categories.some((c) => filters.categories!.includes(c))
+    );
+  }
+  if (filters.platforms?.length) {
+    result = result.filter((t) =>
+      t.platforms.some((p) => filters.platforms!.includes(p))
     );
   }
   if (filters.visualStyles?.length) {
@@ -339,7 +358,8 @@ export function filterTemplates(
         t.name.toLowerCase().includes(q) ||
         t.description.toLowerCase().includes(q) ||
         t.niches.some((n) => n.includes(q)) ||
-        t.creatorStyles.some((s) => s.includes(q))
+        t.creatorStyles.some((s) => s.includes(q)) ||
+        (t.overlayPlatform?.includes(q) ?? false)
     );
   }
 
@@ -357,6 +377,26 @@ export const CATEGORY_LABELS: Record<string, string> = {
   "logo-animation": "Logo Animation",
   transitions: "Transitions",
   "ui-animation": "UI Animation",
+  "social-overlay": "Social Overlay",
+  "subscribe-banner": "Subscribe Banner",
+  "comment-popup": "Comment Popup",
+  "profile-banner": "Profile Banner",
+  "chat-mockup": "Chat Mockup",
+  "search-bar": "Search Bar",
+  notification: "Notification",
+};
+
+export const PLATFORM_LABELS: Record<string, string> = {
+  tiktok: "TikTok",
+  youtube: "YouTube",
+  linkedin: "LinkedIn",
+  instagram: "Instagram",
+  twitch: "Twitch",
+  kick: "Kick",
+  discord: "Discord",
+  twitter: "X (Twitter)",
+  threads: "Threads",
+  reddit: "Reddit",
 };
 
 export const STYLE_LABELS: Record<string, string> = {
