@@ -63,11 +63,14 @@ export async function checkServerExportHealth(): Promise<{
     execSync("ffmpeg -version", { stdio: "ignore" });
     ffmpeg = true;
   } catch {
+    const isHosted =
+      process.env.VERCEL === "1" || process.env.NODE_ENV === "production";
     return {
       available: false,
       ffmpeg: false,
-      message:
-        "ffmpeg is not installed. Run: brew install ffmpeg — then restart npm run dev.",
+      message: isHosted
+        ? "Server MOV export is not available on the hosted app."
+        : "ffmpeg is not installed. Run: brew install ffmpeg — then restart npm run dev.",
     };
   }
 

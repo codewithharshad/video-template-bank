@@ -187,18 +187,7 @@ export async function resolveExportConfig(
     options?.template &&
     shouldUseServerExport(options.template, format);
 
-  if (useServer) {
-    if (!server.available) {
-      return {
-        supported: false,
-        serverAvailable: false,
-        serverMessage: server.message,
-        message:
-          server.message ??
-          "Install ffmpeg for transparent MOV export: brew install ffmpeg",
-      };
-    }
-
+  if (useServer && server.available) {
     const transparent = format === "transparent";
     return {
       supported: true,
@@ -255,7 +244,7 @@ export async function resolveExportConfig(
       serverMessage: server.message,
       message: server.available
         ? "Browser export unavailable. Restart dev server to enable MOV export."
-        : "No supported video codec in this browser. Install ffmpeg for server MOV export.",
+        : "No supported video codec in this browser. Try Chrome, or run locally with ffmpeg for MOV export.",
     };
   } catch {
     return {
@@ -369,33 +358,28 @@ export async function exportVideo(
 
   if (tryServer) {
     const server = await checkServerExportAvailable();
-    if (!server.available) {
-      throw new Error(
-        server.message ??
-          "Transparent MOV requires ffmpeg on the server. Run: brew install ffmpeg — then restart npm run dev."
-      );
+    if (server.available) {
+      const mode = wantsAlpha ? "transparent" : "solid";
+      const result = await exportVideoOnServer({
+        slug: template.slug,
+        inputProps,
+        mode,
+        resolution,
+        onProgress,
+        signal,
+      });
+
+      return {
+        container: "mov",
+        videoCodec: wantsAlpha ? "prores" : "h264",
+        transparent: wantsAlpha,
+        label: wantsAlpha ? "MOV ProRes 4444 + alpha" : "MOV (H.264)",
+        extension: "mov",
+        width: result.width || width,
+        height: result.height || height,
+        source: "server",
+      };
     }
-
-    const mode = wantsAlpha ? "transparent" : "solid";
-    const result = await exportVideoOnServer({
-      slug: template.slug,
-      inputProps,
-      mode,
-      resolution,
-      onProgress,
-      signal,
-    });
-
-    return {
-      container: "mov",
-      videoCodec: wantsAlpha ? "prores" : "h264",
-      transparent: wantsAlpha,
-      label: wantsAlpha ? "MOV ProRes 4444 + alpha" : "MOV (H.264)",
-      extension: "mov",
-      width: result.width || width,
-      height: result.height || height,
-      source: "server",
-    };
   }
 
   return exportVideoInBrowser(options);

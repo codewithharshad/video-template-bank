@@ -193,13 +193,12 @@ export function ExportPanel({
           </div>
         )}
 
-        {serverMessage && isContentExport && transparent && (
-          <div className="flex gap-2 rounded-lg border border-red-500/30 bg-red-500/10 p-3 text-xs text-red-300">
+        {serverMessage && isContentExport && transparent && !usesServer && resolvedConfig && (
+          <div className="flex gap-2 rounded-lg border border-amber-500/30 bg-amber-500/10 p-3 text-xs text-amber-200">
             <AlertCircle className="mt-0.5 h-4 w-4 shrink-0" />
             <span>
-              {serverMessage} Transparent MOV needs ffmpeg — run{" "}
-              <code className="rounded bg-zinc-800 px-1">brew install ffmpeg</code>{" "}
-              and restart <code className="rounded bg-zinc-800 px-1">npm run dev</code>.
+              {serverMessage} Using browser {resolvedConfig.label} instead — Chrome
+              recommended.
             </span>
           </div>
         )}
@@ -284,7 +283,9 @@ export function ExportPanel({
           <div className="flex items-center gap-2 rounded-lg border border-emerald-500/30 bg-emerald-500/10 p-3 text-xs text-emerald-300">
             <CheckCircle2 className="h-4 w-4 shrink-0" />
             {transparent
-              ? `Transparent MOV downloaded (${exportDimensions.width}×${exportDimensions.height}) — import over footage in CapCut. Preview apps may show black where it's transparent.`
+              ? resolvedConfig?.source === "server"
+                ? `Transparent MOV downloaded (${exportDimensions.width}×${exportDimensions.height}) — import over footage in CapCut. Preview apps may show black where it's transparent.`
+                : `${resolvedConfig?.label ?? "Transparent WebM"} downloaded (${exportDimensions.width}×${exportDimensions.height}) — import over footage in your editor.`
               : `${resolvedConfig?.extension.toUpperCase() ?? "File"} downloaded — sized to content.`}
           </div>
         )}
@@ -305,7 +306,9 @@ export function ExportPanel({
             : success
               ? "Exported!"
               : transparent
-                ? "Export transparent MOV"
+                ? resolvedConfig?.source === "server"
+                  ? "Export transparent MOV"
+                  : "Export transparent WebM"
                 : isContentExport
                   ? "Export MOV"
                   : "Export MP4"}
@@ -313,7 +316,9 @@ export function ExportPanel({
 
         <p className="mt-2 text-center text-xs text-zinc-500">
           {transparent
-            ? "Cropped MOV with real transparency. Requires ffmpeg locally."
+            ? usesServer
+              ? "Cropped MOV with real transparency via server (ProRes)."
+              : "Cropped WebM with alpha in your browser. MOV (ProRes) when running locally with ffmpeg."
             : isContentExport
               ? "Solid MOV with background color, sized to content."
               : "Full-frame MP4 export."}
