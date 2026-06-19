@@ -216,11 +216,12 @@ export async function exportVideo(options: ExportOptions): Promise<ResolvedExpor
     );
   }
 
-  const { container, videoCodec, transparent, extension } = support.resolved;
+  const { container, videoCodec, extension } = support.resolved;
+  const wantsAlpha = format === "webm-alpha";
 
   const exportProps = prepareExportProps(
     coerceTemplateProps(template, inputProps),
-    transparent
+    wantsAlpha
   );
 
   const { getBlob } = await renderMediaOnWeb({
@@ -237,8 +238,8 @@ export async function exportVideo(options: ExportOptions): Promise<ResolvedExpor
     inputProps: exportProps,
     container,
     videoCodec,
-    transparent,
-    videoBitrate: transparent ? "very-high" : "medium",
+    transparent: wantsAlpha,
+    videoBitrate: wantsAlpha ? "very-high" : "medium",
     muted: true,
     onProgress: (progress) => {
       onProgress?.(progress.progress);
@@ -246,7 +247,7 @@ export async function exportVideo(options: ExportOptions): Promise<ResolvedExpor
   });
 
   const blob = await getBlob();
-  const suffix = transparent ? "transparent" : extension;
+  const suffix = wantsAlpha ? "transparent" : extension;
   const filename = `hookforge-${template.slug}-${suffix}-${Date.now()}.${extension}`;
   downloadBlob(blob, filename);
 

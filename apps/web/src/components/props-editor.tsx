@@ -8,9 +8,15 @@ interface PropsEditorProps {
   template: HookTemplate;
   props: Record<string, string | number>;
   onChange: (props: Record<string, string | number>) => void;
+  transparentExport?: boolean;
 }
 
-export function PropsEditor({ template, props, onChange }: PropsEditorProps) {
+export function PropsEditor({
+  template,
+  props,
+  onChange,
+  transparentExport = false,
+}: PropsEditorProps) {
   const { brand } = useBrand();
 
   const applyBrand = () => {
@@ -31,7 +37,18 @@ export function PropsEditor({ template, props, onChange }: PropsEditorProps) {
       </div>
 
       <div className="space-y-4">
-        {template.props.map((field) => (
+        {template.props.map((field) => {
+          if (transparentExport && field.key === "backgroundColor") {
+            return null;
+          }
+
+          const rawColor = String(props[field.key] ?? "");
+          const colorPickerValue =
+            rawColor.startsWith("#") && rawColor.length >= 7
+              ? rawColor.slice(0, 7)
+              : "#000000";
+
+          return (
           <div key={field.key}>
             <label className="mb-1.5 block text-xs text-zinc-500">
               {field.label}
@@ -67,7 +84,7 @@ export function PropsEditor({ template, props, onChange }: PropsEditorProps) {
               <div className="flex items-center gap-2">
                 <input
                   type="color"
-                  value={String(props[field.key] ?? "#000000")}
+                  value={colorPickerValue}
                   onChange={(e) =>
                     onChange({ ...props, [field.key]: e.target.value })
                   }
@@ -84,7 +101,8 @@ export function PropsEditor({ template, props, onChange }: PropsEditorProps) {
               </div>
             )}
           </div>
-        ))}
+          );
+        })}
       </div>
     </div>
   );

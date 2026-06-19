@@ -163,7 +163,7 @@ export const FollowNotification: React.FC<FollowNotificationProps> = ({
             display: "flex",
             alignItems: "center",
             gap: 16,
-            background: "rgba(0,0,0,0.85)",
+            background: transparent ? "#18181b" : "rgba(0,0,0,0.85)",
             borderRadius: 16,
             padding: "18px 28px",
             borderLeft: `4px solid ${color}`,

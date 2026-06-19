@@ -1,5 +1,5 @@
 import { AbsoluteFill, useCurrentFrame, useVideoConfig } from "remotion";
-import { isTransparentBg, resolveBg } from "../../lib/background";
+import { isTransparentBg, overlayPanelBg, resolveBg } from "../../lib/background";
 import { slideIn } from "../../lib/motion";
 import { Avatar, OverlayRoot } from "./shared";
 
@@ -26,7 +26,13 @@ export const TikTokCommentPopup: React.FC<TikTokCommentPopupProps> = ({
   const transparent = isTransparentBg(backgroundColor);
   const anim = slideIn(frame, fps, 8, 120);
 
-  const bg = dark ? "rgba(24,24,27,0.92)" : "rgba(255,255,255,0.95)";
+  const bg = overlayPanelBg(transparent, dark, {
+    dark: "#18181b",
+    light: "#ffffff",
+  }, {
+    dark: "rgba(24,24,27,0.92)",
+    light: "rgba(255,255,255,0.95)",
+  });
 
   return (
     <AbsoluteFill style={{ backgroundColor: resolveBg(backgroundColor, "transparent") }}>
@@ -43,7 +49,7 @@ export const TikTokCommentPopup: React.FC<TikTokCommentPopupProps> = ({
             alignItems: "flex-start",
             transform: `translateY(${anim.translateY}px)`,
             opacity: anim.opacity,
-            backdropFilter: "blur(12px)",
+            backdropFilter: transparent ? undefined : "blur(12px)",
           }}
         >
           <Avatar name={username} color={accentColor} size={56} />

@@ -4,7 +4,26 @@ export function isTransparentBg(color?: string | number): boolean {
 }
 
 export function resolveBg(color?: string | number, fallback = "#000000"): string | undefined {
-  return isTransparentBg(color) ? undefined : String(color ?? fallback);
+  if (isTransparentBg(color)) return undefined;
+  if (color !== undefined && color !== null && String(color).trim() !== "") {
+    return String(color);
+  }
+  if (isTransparentBg(fallback)) return undefined;
+  return fallback;
+}
+
+/**
+ * Semi-transparent rgba + backdrop-filter composites against black in WebCodecs
+ * export. Use opaque panel fills when the canvas background is transparent.
+ */
+export function overlayPanelBg(
+  transparent: boolean,
+  dark: boolean,
+  opaque: { dark: string; light: string },
+  glass: { dark: string; light: string }
+): string {
+  if (transparent) return dark ? opaque.dark : opaque.light;
+  return dark ? glass.dark : glass.light;
 }
 
 /**

@@ -1,5 +1,5 @@
 import { AbsoluteFill, useCurrentFrame, useVideoConfig } from "remotion";
-import { isTransparentBg, resolveBg } from "../../lib/background";
+import { isTransparentBg, overlayPanelBg, resolveBg } from "../../lib/background";
 import { fadeIn, slideIn } from "../../lib/motion";
 import { Avatar, OverlayRoot } from "./shared";
 
@@ -125,7 +125,13 @@ export const IMessageNotification: React.FC<IMessageNotificationProps> = ({
   const transparent = isTransparentBg(backgroundColor);
   const anim = slideIn(frame, fps, 5, -60);
 
-  const bg = dark ? "rgba(28,28,30,0.95)" : "rgba(255,255,255,0.95)";
+  const bg = overlayPanelBg(transparent, dark, {
+    dark: "#1c1c1e",
+    light: "#ffffff",
+  }, {
+    dark: "rgba(28,28,30,0.95)",
+    light: "rgba(255,255,255,0.95)",
+  });
 
   return (
     <AbsoluteFill style={{ backgroundColor: resolveBg(backgroundColor, "transparent") }}>
@@ -142,7 +148,7 @@ export const IMessageNotification: React.FC<IMessageNotificationProps> = ({
             alignItems: "center",
             transform: `translateY(${anim.translateY}px)`,
             opacity: anim.opacity,
-            backdropFilter: "blur(16px)",
+            backdropFilter: transparent ? undefined : "blur(16px)",
           }}
         >
           <div

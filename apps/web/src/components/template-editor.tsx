@@ -84,11 +84,16 @@ export function TemplateEditor({
         </div>
 
         <div className="space-y-4">
-          <PropsEditor template={template} props={props} onChange={setProps} />
+          <PropsEditor
+            template={template}
+            props={props}
+            onChange={setProps}
+            transparentExport={transparentExport}
+          />
           <BrandKitPanel />
           <ExportPanel
             template={template}
-            inputProps={props}
+            inputProps={previewProps}
             transparent={transparentExport}
             onTransparentChange={setTransparentExport}
           />

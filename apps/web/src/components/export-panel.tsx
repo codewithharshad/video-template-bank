@@ -232,7 +232,7 @@ export function ExportPanel({
 
         <p className="mt-2 text-center text-xs text-zinc-500">
           {transparent
-            ? "Checkerboard in preview = transparent areas."
+            ? "Import the WebM into CapCut, DaVinci, or Premiere — QuickTime and browser previews show black instead of transparency."
             : "Chrome recommended for MP4. Other browsers auto-fallback to WebM."}
         </p>
       </div>

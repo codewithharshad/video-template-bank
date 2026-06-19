@@ -1,5 +1,5 @@
 import { AbsoluteFill, useCurrentFrame, useVideoConfig } from "remotion";
-import { isTransparentBg, resolveBg } from "../../lib/background";
+import { isTransparentBg, overlayPanelBg, resolveBg } from "../../lib/background";
 import { popIn, slideIn } from "../../lib/motion";
 import { Avatar, OverlayRoot } from "./shared";
 
@@ -109,7 +109,13 @@ export const InstagramHeartNotification: React.FC<InstagramHeartNotificationProp
   const anim = slideIn(frame, fps, 5, -50);
   const heart = popIn(frame, fps, 15);
 
-  const bg = dark ? "rgba(18,18,18,0.95)" : "rgba(255,255,255,0.95)";
+  const bg = overlayPanelBg(transparent, dark, {
+    dark: "#121212",
+    light: "#ffffff",
+  }, {
+    dark: "rgba(18,18,18,0.95)",
+    light: "rgba(255,255,255,0.95)",
+  });
 
   return (
     <AbsoluteFill style={{ backgroundColor: resolveBg(backgroundColor, "transparent") }}>
@@ -124,7 +130,7 @@ export const InstagramHeartNotification: React.FC<InstagramHeartNotificationProp
             padding: "16px 28px",
             transform: `translateY(${anim.translateY}px)`,
             opacity: anim.opacity,
-            backdropFilter: "blur(10px)",
+            backdropFilter: transparent ? undefined : "blur(10px)",
           }}
         >
           <div style={{ transform: `scale(${heart.scale})`, fontSize: 36 }}>❤️</div>

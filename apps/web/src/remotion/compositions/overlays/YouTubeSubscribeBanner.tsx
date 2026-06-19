@@ -1,5 +1,5 @@
 import { AbsoluteFill, useCurrentFrame, useVideoConfig } from "remotion";
-import { isTransparentBg, resolveBg } from "../../lib/background";
+import { isTransparentBg, overlayPanelBg, resolveBg } from "../../lib/background";
 import { popIn, slideIn } from "../../lib/motion";
 import { Avatar, OverlayRoot, PillButton } from "./shared";
 
@@ -25,7 +25,13 @@ export const YouTubeSubscribeBanner: React.FC<YouTubeSubscribeBannerProps> = ({
   const banner = slideIn(frame, fps, 5, 100);
   const bell = popIn(frame, fps, 35);
 
-  const bg = dark ? "rgba(0,0,0,0.85)" : "rgba(255,255,255,0.95)";
+  const bg = overlayPanelBg(transparent, dark, {
+    dark: "#18181b",
+    light: "#ffffff",
+  }, {
+    dark: "rgba(0,0,0,0.85)",
+    light: "rgba(255,255,255,0.95)",
+  });
   const text = dark ? "#fff" : "#18181b";
 
   return (
@@ -43,7 +49,7 @@ export const YouTubeSubscribeBanner: React.FC<YouTubeSubscribeBannerProps> = ({
             gap: 20,
             transform: `translateY(${banner.translateY}px)`,
             opacity: banner.opacity,
-            backdropFilter: "blur(12px)",
+            backdropFilter: transparent ? undefined : "blur(12px)",
           }}
         >
           <Avatar name={channelName} color={accentColor} size={72} />
