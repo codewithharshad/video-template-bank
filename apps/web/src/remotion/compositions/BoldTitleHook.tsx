@@ -6,6 +6,7 @@ import {
   useVideoConfig,
 } from "remotion";
 import { resolveBg } from "../lib/background";
+import { useCompactPadding } from "../lib/compact-layout";
 
 export interface BoldTitleHookProps {
   headline: string;
@@ -23,14 +24,15 @@ export const BoldTitleHook: React.FC<BoldTitleHookProps> = ({
   const frame = useCurrentFrame();
   const { fps } = useVideoConfig();
   const words = headline.split(" ");
+  const padding = useCompactPadding();
 
   return (
     <AbsoluteFill
       style={{
-        backgroundColor: resolveBg(backgroundColor, "#0a0a0a"),
+        backgroundColor: resolveBg(backgroundColor, "transparent"),
         justifyContent: "center",
         alignItems: "center",
-        padding: 60,
+        padding,
       }}
     >
       <div style={{ textAlign: "center", maxWidth: 900 }}>

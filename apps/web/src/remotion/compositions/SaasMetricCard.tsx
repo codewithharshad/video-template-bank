@@ -6,6 +6,7 @@ import {
   useVideoConfig,
 } from "remotion";
 import { isTransparentBg, resolveBg } from "../lib/background";
+import { useCompactPadding } from "../lib/compact-layout";
 
 export interface SaasMetricCardProps {
   metricLabel: string;
@@ -30,6 +31,7 @@ export const SaasMetricCard: React.FC<SaasMetricCardProps> = ({
   const { fps } = useVideoConfig();
   const transparent = isTransparentBg(backgroundColor);
   const isPositive = changePercent >= 0;
+  const padding = useCompactPadding();
 
   const cardScale = spring({
     frame: frame - 8,
@@ -46,7 +48,7 @@ export const SaasMetricCard: React.FC<SaasMetricCardProps> = ({
           : `radial-gradient(circle at 20% 20%, ${primaryColor}25 0%, ${backgroundColor} 55%)`,
         justifyContent: "center",
         alignItems: "center",
-        padding: 60,
+        padding,
       }}
     >
       <div

@@ -35,8 +35,8 @@ export default function HooksPage() {
           Animation Templates
         </h1>
         <p className="mt-2 text-zinc-400">
-          When two videos are otherwise similar, the one with better editing
-          gets about 50% more views. Pick a hook, customize, export.
+          Kinetic hooks for cold opens and pattern interrupts. Customize and export
+          with transparent, content-sized MOV files.
         </p>
       </div>
 

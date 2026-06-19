@@ -6,6 +6,7 @@ import {
   useVideoConfig,
 } from "remotion";
 import { isTransparentBg } from "../lib/background";
+import { useCompactInsets } from "../lib/compact-layout";
 
 export interface ThreePointRevealProps {
   title: string;
@@ -28,6 +29,7 @@ export const ThreePointReveal: React.FC<ThreePointRevealProps> = ({
   const { fps } = useVideoConfig();
   const points = [point1, point2, point3];
   const transparent = isTransparentBg(backgroundColor);
+  const insets = useCompactInsets({ vertical: 80, horizontal: 100 });
 
   return (
     <AbsoluteFill
@@ -38,7 +40,7 @@ export const ThreePointReveal: React.FC<ThreePointRevealProps> = ({
         backgroundColor: transparent ? undefined : backgroundColor,
         justifyContent: "center",
         alignItems: "flex-start",
-        padding: "80px 100px",
+        padding: `${insets.vertical}px ${insets.horizontal}px`,
       }}
     >
       <h1

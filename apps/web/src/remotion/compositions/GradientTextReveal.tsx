@@ -6,6 +6,7 @@ import {
   useVideoConfig,
 } from "remotion";
 import { isTransparentBg } from "../lib/background";
+import { useCompactPadding } from "../lib/compact-layout";
 
 export interface GradientTextRevealProps {
   headline: string;
@@ -23,8 +24,10 @@ export const GradientTextReveal: React.FC<GradientTextRevealProps> = ({
   backgroundColor = "#09090b",
 }) => {
   const frame = useCurrentFrame();
-  const { fps } = useVideoConfig();
+  const { fps, height } = useVideoConfig();
   const transparent = isTransparentBg(backgroundColor);
+  const padding = useCompactPadding();
+  const compact = height < 960;
 
   const titleScale = spring({
     frame,
@@ -41,7 +44,7 @@ export const GradientTextReveal: React.FC<GradientTextRevealProps> = ({
         backgroundColor: transparent ? undefined : backgroundColor,
         justifyContent: "center",
         alignItems: "center",
-        padding: 60,
+        padding,
       }}
     >
       <div
@@ -49,7 +52,7 @@ export const GradientTextReveal: React.FC<GradientTextRevealProps> = ({
           background: transparent ? undefined : "rgba(255,255,255,0.05)",
           border: transparent ? undefined : "1px solid rgba(255,255,255,0.1)",
           borderRadius: 24,
-          padding: "48px 56px",
+          padding: compact ? "24px 28px" : "48px 56px",
           backdropFilter: transparent ? undefined : "blur(20px)",
           textAlign: "center",
           transform: `scale(${titleScale})`,

@@ -94,6 +94,12 @@ export interface HookTemplate {
   popularity: number;
   previewGradient: string;
   props: PropField[];
+  /** Content crop size at 1080p — overrides composition defaults when set */
+  exportFrame?: {
+    width: number;
+    height: number;
+    variants?: Record<string, { width: number; height: number }>;
+  };
 }
 
 export interface BrandKit {

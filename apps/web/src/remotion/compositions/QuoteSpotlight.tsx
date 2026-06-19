@@ -4,6 +4,7 @@ import {
   useCurrentFrame,
 } from "remotion";
 import { isTransparentBg, resolveBg } from "../lib/background";
+import { useCompactPadding } from "../lib/compact-layout";
 
 export interface QuoteSpotlightProps {
   quote: string;
@@ -20,6 +21,7 @@ export const QuoteSpotlight: React.FC<QuoteSpotlightProps> = ({
 }) => {
   const frame = useCurrentFrame();
   const transparent = isTransparentBg(backgroundColor);
+  const padding = useCompactPadding(80);
 
   const spotlightOpacity = interpolate(frame, [0, 20, 80, 100], [0, 0.6, 0.6, 0.3], {
     extrapolateLeft: "clamp",
@@ -32,7 +34,7 @@ export const QuoteSpotlight: React.FC<QuoteSpotlightProps> = ({
         backgroundColor: resolveBg(backgroundColor, "#09090b"),
         justifyContent: "center",
         alignItems: "center",
-        padding: 80,
+        padding,
       }}
     >
       {!transparent && (

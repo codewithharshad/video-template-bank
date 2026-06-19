@@ -4,6 +4,7 @@ import {
   useCurrentFrame,
 } from "remotion";
 import { isTransparentBg, resolveBg } from "../lib/background";
+import { useCompactPadding } from "../lib/compact-layout";
 
 export interface ZoomTransitionProps {
   text: string;
@@ -18,6 +19,7 @@ export const ZoomTransition: React.FC<ZoomTransitionProps> = ({
 }) => {
   const frame = useCurrentFrame();
   const transparent = isTransparentBg(backgroundColor);
+  const padding = useCompactPadding(0);
 
   const zoom = interpolate(frame, [0, 15, 30, 45], [1, 3, 3, 0.5], {
     extrapolateLeft: "clamp",
@@ -35,6 +37,7 @@ export const ZoomTransition: React.FC<ZoomTransitionProps> = ({
         backgroundColor: resolveBg(backgroundColor, "#ef4444"),
         justifyContent: "center",
         alignItems: "center",
+        padding,
       }}
     >
       {!transparent && (

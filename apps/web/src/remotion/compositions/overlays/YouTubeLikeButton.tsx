@@ -1,5 +1,5 @@
 import { AbsoluteFill, useCurrentFrame, useVideoConfig } from "remotion";
-import { isTransparentBg, resolveBg } from "../../lib/background";
+import { isTransparentBg, overlayPanelBg, resolveBg } from "../../lib/background";
 import { popIn, slideIn } from "../../lib/motion";
 import { Avatar, OverlayRoot } from "./shared";
 
@@ -23,11 +23,17 @@ export const YouTubeLikeButton: React.FC<YouTubeLikeButtonProps> = ({
   const anim = popIn(frame, fps, 10);
   const thumb = popIn(frame, fps, 0);
 
-  const bg = dark ? "rgba(30,30,30,0.95)" : "rgba(255,255,255,0.95)";
+  const bg = overlayPanelBg(transparent, dark, {
+    dark: "#1e1e1e",
+    light: "#ffffff",
+  }, {
+    dark: "rgba(30,30,30,0.95)",
+    light: "rgba(255,255,255,0.95)",
+  });
 
   return (
     <AbsoluteFill style={{ backgroundColor: resolveBg(backgroundColor, "transparent") }}>
-      <OverlayRoot backgroundColor={transparent ? undefined : resolveBg(backgroundColor)}>
+      <OverlayRoot backgroundColor={transparent ? undefined : resolveBg(backgroundColor)} compact>
         <div
           style={{
             background: bg,
@@ -78,7 +84,7 @@ export const YouTubeLiveBadge: React.FC<YouTubeLiveBadgeProps> = ({
 
   return (
     <AbsoluteFill style={{ backgroundColor: resolveBg(backgroundColor, "transparent") }}>
-      <OverlayRoot align="top" backgroundColor={transparent ? undefined : resolveBg(backgroundColor)}>
+      <OverlayRoot align="top" backgroundColor={transparent ? undefined : resolveBg(backgroundColor)} compact>
         <div
           style={{
             display: "flex",
@@ -103,7 +109,7 @@ export const YouTubeLiveBadge: React.FC<YouTubeLiveBadgeProps> = ({
           </div>
           <div
             style={{
-              background: "rgba(0,0,0,0.75)",
+              background: transparent ? "#18181b" : "rgba(0,0,0,0.75)",
               color: "#fff",
               fontWeight: 600,
               fontSize: 22,

@@ -6,6 +6,7 @@ import {
   useVideoConfig,
 } from "remotion";
 import { isTransparentBg, resolveBg } from "../lib/background";
+import { useCompactPadding } from "../lib/compact-layout";
 
 export interface ComparisonBarsProps {
   title: string;
@@ -48,6 +49,7 @@ export const ComparisonBars: React.FC<ComparisonBarsProps> = ({
   const { fps } = useVideoConfig();
   const transparent = isTransparentBg(backgroundColor);
   const maxValue = Math.max(valueA, valueB, 1);
+  const padding = useCompactPadding();
 
   const barAProgress = interpolate(frame, [15, 55], [0, valueA / maxValue], {
     extrapolateLeft: "clamp",
@@ -75,7 +77,7 @@ export const ComparisonBars: React.FC<ComparisonBarsProps> = ({
         backgroundColor: resolveBg(backgroundColor, "#09090b"),
         justifyContent: "center",
         alignItems: "center",
-        padding: 60,
+        padding,
       }}
     >
       <div

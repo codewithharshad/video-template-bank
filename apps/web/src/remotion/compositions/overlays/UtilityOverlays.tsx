@@ -116,7 +116,7 @@ export const BrowserAddressBar: React.FC<BrowserAddressBarProps> = ({
 
   return (
     <AbsoluteFill style={{ backgroundColor: resolveBg(backgroundColor, "transparent") }}>
-      <OverlayRoot align="top" backgroundColor={transparent ? undefined : resolveBg(backgroundColor)}>
+      <OverlayRoot align="top" compact backgroundColor={transparent ? undefined : resolveBg(backgroundColor)}>
         <div
           style={{
             width: "100%",
@@ -184,7 +184,7 @@ export const SearchBarTyping: React.FC<SearchBarTypingProps> = ({
 
   return (
     <AbsoluteFill style={{ backgroundColor: resolveBg(backgroundColor, "transparent") }}>
-      <OverlayRoot backgroundColor={transparent ? undefined : resolveBg(backgroundColor)}>
+      <OverlayRoot compact backgroundColor={transparent ? undefined : resolveBg(backgroundColor)}>
         <div
           style={{
             width: "100%",

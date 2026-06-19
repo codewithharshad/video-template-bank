@@ -13,6 +13,7 @@ type OverlayDef = {
   previewGradient: string;
   defaultProps: Record<string, string | number>;
   props: PropField[];
+  exportFrame?: HookTemplate["exportFrame"];
 };
 
 const TRANSPARENT_BG = { key: "backgroundColor", label: "Background", type: "color" as const, defaultValue: "transparent" };
@@ -46,6 +47,7 @@ function overlay(
     popularity: def.popularity,
     previewGradient: def.previewGradient,
     props: def.props,
+    exportFrame: def.exportFrame,
   };
 }
 

@@ -4,6 +4,7 @@ import dynamic from "next/dynamic";
 import type { HookTemplate } from "@video-lib/template-sdk";
 import { Play } from "lucide-react";
 import { Component, type ReactNode } from "react";
+import { fitsContentExport, getExportDimensions } from "@/lib/export-dimensions";
 import { isTransparentProps } from "@/lib/transparent-export";
 
 function PreviewSkeleton() {
@@ -67,12 +68,22 @@ export function TemplatePreview({
   className,
 }: TemplatePreviewProps) {
   const transparent = isTransparentProps(inputProps);
+  const contentSized = transparent && fitsContentExport(template);
+  const exportFrame = contentSized
+    ? getExportDimensions(template, "1080p", {
+        fitToContent: true,
+        inputProps,
+      })
+    : null;
 
   return (
     <div className={className}>
       {transparent && (
         <p className="mb-2 text-center text-xs text-emerald-400">
           Transparent preview — checkerboard = no background
+          {exportFrame
+            ? ` · exports at ${exportFrame.width}×${exportFrame.height}`
+            : ""}
         </p>
       )}
       <div
@@ -94,12 +105,17 @@ export function TemplatePreview({
         }
       >
         <PreviewErrorBoundary>
-          <RemotionPlayerInner template={template} inputProps={inputProps} />
+          <RemotionPlayerInner
+            template={template}
+            inputProps={inputProps}
+            compositionWidth={exportFrame?.width}
+            compositionHeight={exportFrame?.height}
+          />
         </PreviewErrorBoundary>
       </div>
       {transparent && (
         <p className="mt-2 text-center text-xs text-zinc-500">
-          Export as WebM to keep transparency in your editor
+          Export as transparent MOV (cropped to graphic) for CapCut / Premiere
         </p>
       )}
     </div>

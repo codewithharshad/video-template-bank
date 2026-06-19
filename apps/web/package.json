@@ -11,6 +11,8 @@
   },
   "dependencies": {
     "@remotion/player": "^4.0.286",
+    "@remotion/bundler": "^4.0.286",
+    "@remotion/renderer": "^4.0.286",
     "@remotion/web-renderer": "^4.0.286",
     "@video-lib/template-sdk": "*",
     "clsx": "^2.1.1",

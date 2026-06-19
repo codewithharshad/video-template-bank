@@ -6,6 +6,7 @@ import {
   useVideoConfig,
 } from "remotion";
 import { isTransparentBg, resolveBg, textGlow } from "../lib/background";
+import { useCompactPadding } from "../lib/compact-layout";
 
 export interface CounterRevealProps {
   value: number;
@@ -25,6 +26,7 @@ export const CounterReveal: React.FC<CounterRevealProps> = ({
   const frame = useCurrentFrame();
   const { fps } = useVideoConfig();
   const transparent = isTransparentBg(backgroundColor);
+  const padding = useCompactPadding();
 
   const countProgress = interpolate(frame, [10, 70], [0, 1], {
     extrapolateLeft: "clamp",
@@ -44,7 +46,7 @@ export const CounterReveal: React.FC<CounterRevealProps> = ({
         backgroundColor: resolveBg(backgroundColor, "#030712"),
         justifyContent: "center",
         alignItems: "center",
-        padding: 60,
+        padding,
       }}
     >
       <div style={{ textAlign: "center" }}>

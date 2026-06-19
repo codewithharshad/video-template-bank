@@ -52,12 +52,33 @@ video-lib/
 
 ## Export
 
-Videos render **in your browser** using Remotion's `@remotion/web-renderer` (WebCodecs):
+**Overlay effects** (VideoEffects-style):
 
-- **MP4** — H.264, works in Chrome 94+
-- **WebM + Alpha** — VP9 with transparent background for NLE compositing
+- **Transparent MOV** — server-rendered ProRes 4444 with alpha, cropped to content
+- **Solid MOV** — Pro templates keep the card background color
+- Falls back to browser WebM if server export is unavailable
 
-No server upload required. For high-volume production, wire Remotion Lambda next.
+**Hooks** export as full-frame MP4 in the browser.
+
+### Server export setup (transparent MOV)
+
+Requires **ffmpeg** on your machine:
+
+```bash
+brew install ffmpeg
+npm run dev
+```
+
+Check health: `GET http://localhost:3000/api/export/health`
+
+Disable server export: `ENABLE_SERVER_EXPORT=false`
+
+### Browser export (fallback)
+
+Uses `@remotion/web-renderer` (WebCodecs) when server export is off:
+
+- **WebM + Alpha** — VP8/VP9 with transparent background
+- **MP4** — H.264 in Chrome 94+
 - [ ] Add Stripe billing (free / creator / pro tiers)
 - [ ] AI script → template recommendation
 - [ ] Creator marketplace for uploaded templates

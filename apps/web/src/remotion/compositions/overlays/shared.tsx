@@ -1,14 +1,20 @@
 import type { CSSProperties, ReactNode } from "react";
+import { useVideoConfig } from "remotion";
 
 export function OverlayRoot({
   children,
   backgroundColor,
   align = "center",
+  compact: compactProp,
 }: {
   children: ReactNode;
   backgroundColor?: string;
   align?: "center" | "bottom" | "top";
+  /** Tighter padding for content-sized export canvases */
+  compact?: boolean;
 }) {
+  const { height } = useVideoConfig();
+  const compact = compactProp ?? height < 960;
   const justify =
     align === "bottom" ? "flex-end" : align === "top" ? "flex-start" : "center";
 
@@ -21,7 +27,7 @@ export function OverlayRoot({
         flexDirection: "column",
         justifyContent: justify,
         alignItems: "center",
-        padding: 48,
+        padding: compact ? 12 : 48,
         backgroundColor,
         fontFamily: "Inter, system-ui, sans-serif",
       }}

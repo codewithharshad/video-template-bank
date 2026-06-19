@@ -8,11 +8,15 @@ import { getComposition } from "@/remotion";
 interface RemotionPlayerInnerProps {
   template: HookTemplate;
   inputProps: Record<string, string | number>;
+  compositionWidth?: number;
+  compositionHeight?: number;
 }
 
 export function RemotionPlayerInner({
   template,
   inputProps,
+  compositionWidth: widthOverride,
+  compositionHeight: heightOverride,
 }: RemotionPlayerInnerProps) {
   const Component = getComposition(template.compositionId);
 
@@ -25,20 +29,21 @@ export function RemotionPlayerInner({
   }
 
   const coercedProps = coerceTemplateProps(template, inputProps);
-  const isLandscape = template.width > template.height;
+  const compositionWidth = widthOverride ?? template.width;
+  const compositionHeight = heightOverride ?? template.height;
 
   return (
     <Player
-      key={`${template.compositionId}-${JSON.stringify(coercedProps)}`}
+      key={`${template.compositionId}-${compositionWidth}x${compositionHeight}-${JSON.stringify(coercedProps)}`}
       component={Component}
       inputProps={coercedProps}
       durationInFrames={template.durationInFrames}
       fps={template.fps}
-      compositionWidth={template.width}
-      compositionHeight={template.height}
+      compositionWidth={compositionWidth}
+      compositionHeight={compositionHeight}
       style={{
         width: "100%",
-        aspectRatio: isLandscape ? "16 / 9" : "9 / 16",
+        aspectRatio: `${compositionWidth} / ${compositionHeight}`,
         borderRadius: 12,
         overflow: "hidden",
       }}

@@ -6,6 +6,7 @@ import {
   useVideoConfig,
 } from "remotion";
 import { isTransparentBg, resolveBg } from "../lib/background";
+import { useCompactPadding } from "../lib/compact-layout";
 
 export interface FinanceMarketAlertProps {
   ticker: string;
@@ -29,6 +30,7 @@ export const FinanceMarketAlert: React.FC<FinanceMarketAlertProps> = ({
   const transparent = isTransparentBg(backgroundColor);
   const isUp = changePercent >= 0;
   const alertColor = isUp ? "#22c55e" : "#ef4444";
+  const padding = useCompactPadding();
 
   const pulse = spring({
     frame: frame - 5,
@@ -42,7 +44,7 @@ export const FinanceMarketAlert: React.FC<FinanceMarketAlertProps> = ({
         backgroundColor: resolveBg(backgroundColor, "#020617"),
         justifyContent: "center",
         alignItems: "center",
-        padding: 60,
+        padding,
       }}
     >
       <div style={{ width: "100%", maxWidth: 800 }}>

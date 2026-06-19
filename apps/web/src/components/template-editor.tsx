@@ -18,6 +18,7 @@ import { ExportPanel } from "@/components/export-panel";
 import { BrandKitPanel } from "@/components/brand-kit-panel";
 import { useBrand } from "@/components/brand-provider";
 import { withTransparentBackground } from "@/lib/transparent-export";
+import { fitsContentExport } from "@/lib/export-dimensions";
 
 export function TemplateEditor({
   slug,
@@ -40,13 +41,14 @@ export function TemplateEditor({
     initialProps
   );
   const [transparentExport, setTransparentExport] = useState(
-    () => template?.templateKind === "overlay"
+    () =>
+      template?.templateKind === "overlay" || template?.templateKind === "hook"
   );
 
   useEffect(() => {
     if (template) {
       setProps(applyBrandToProps(template, getDefaultProps(template), brand));
-      if (template.templateKind === "overlay") {
+      if (template.templateKind === "overlay" || template.templateKind === "hook") {
         setTransparentExport(true);
       }
     }
@@ -59,6 +61,10 @@ export function TemplateEditor({
   const previewProps = transparentExport
     ? withTransparentBackground(props)
     : props;
+  const landscapePreview =
+    transparentExport &&
+    fitsContentExport(template) &&
+    template.width > template.height;
 
   return (
     <div className="mx-auto max-w-7xl px-4 py-6 sm:px-6">
@@ -74,7 +80,7 @@ export function TemplateEditor({
 
       <div className="grid gap-6 lg:grid-cols-[1fr_380px]">
         <div className="glass flex min-h-[480px] items-center justify-center rounded-2xl p-6 sm:p-10">
-          <div className="w-full max-w-sm">
+          <div className={`w-full ${landscapePreview ? "max-w-2xl" : "max-w-sm"}`}>
             <TemplatePreview
               key={`${slug}-${transparentExport ? "alpha" : "solid"}`}
               template={template}

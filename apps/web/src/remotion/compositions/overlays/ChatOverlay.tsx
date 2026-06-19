@@ -32,7 +32,13 @@ export const ChatOverlay: React.FC<ChatOverlayProps> = ({
   const msg2 = slideIn(frame, fps, 35, 30);
 
   const headerBg = isWhatsApp ? "#075e54" : dark ? "#1c1c1e" : "#f2f2f7";
-  const chatBg = isWhatsApp ? "#0b141a" : dark ? "#000" : "#fff";
+  const chatBg = transparent
+    ? undefined
+    : isWhatsApp
+      ? "#0b141a"
+      : dark
+        ? "#000"
+        : "#fff";
   const bubbleOut = isWhatsApp ? "#005c4b" : accentColor;
   const bubbleIn = dark ? "#262628" : "#e9e9eb";
   const textOut = "#fff";
@@ -45,26 +51,52 @@ export const ChatOverlay: React.FC<ChatOverlayProps> = ({
           style={{
             width: "100%",
             maxWidth: 880,
-            borderRadius: 24,
-            overflow: "hidden",
+            borderRadius: transparent ? undefined : 24,
+            overflow: transparent ? "visible" : "hidden",
             transform: `translateY(${panel.translateY}px)`,
             opacity: panel.opacity,
             boxShadow: transparent ? "none" : "0 24px 64px rgba(0,0,0,0.45)",
           }}
         >
+          {!transparent && (
+            <div
+              style={{
+                background: headerBg,
+                padding: "20px 24px",
+                display: "flex",
+                alignItems: "center",
+                gap: 16,
+              }}
+            >
+              <Avatar name={contactName} color={accentColor} size={48} />
+              <div style={{ fontWeight: 700, fontSize: 26, color: "#fff" }}>{contactName}</div>
+            </div>
+          )}
           <div
             style={{
-              background: headerBg,
-              padding: "20px 24px",
+              background: chatBg,
+              padding: transparent ? 0 : 24,
+              minHeight: transparent ? undefined : 280,
               display: "flex",
-              alignItems: "center",
+              flexDirection: "column",
               gap: 16,
             }}
           >
-            <Avatar name={contactName} color={accentColor} size={48} />
-            <div style={{ fontWeight: 700, fontSize: 26, color: "#fff" }}>{contactName}</div>
-          </div>
-          <div style={{ background: chatBg, padding: 24, minHeight: 280 }}>
+            {transparent && (
+              <div
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  gap: 12,
+                  paddingLeft: 4,
+                }}
+              >
+                <Avatar name={contactName} color={accentColor} size={40} />
+                <div style={{ fontWeight: 700, fontSize: 22, color: dark ? "#fff" : "#18181b" }}>
+                  {contactName}
+                </div>
+              </div>
+            )}
             <div
               style={{
                 maxWidth: "75%",
@@ -74,7 +106,7 @@ export const ChatOverlay: React.FC<ChatOverlayProps> = ({
                 borderRadius: 18,
                 fontSize: 22,
                 lineHeight: 1.4,
-                marginBottom: 16,
+                marginBottom: transparent ? 0 : 16,
                 transform: `translateY(${msg1.translateY}px)`,
                 opacity: msg1.opacity,
               }}
