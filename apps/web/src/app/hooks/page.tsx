@@ -2,15 +2,16 @@
 
 import { useMemo, useState } from "react";
 import {
-  TEMPLATE_CATALOG,
   filterTemplates,
   type FilterState,
 } from "@video-lib/template-sdk";
+import { useCatalog } from "@/components/catalog-provider";
 import { TemplateCard } from "@/components/template-card";
 import { FilterSidebar, SearchBar } from "@/components/filter-sidebar";
 import { BrandKitPanel } from "@/components/brand-kit-panel";
 
 export default function HooksPage() {
+  const { templates } = useCatalog();
   const [filters, setFilters] = useState<FilterState>({
     categories: [],
     visualStyles: [],
@@ -24,8 +25,8 @@ export default function HooksPage() {
   const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false);
 
   const filtered = useMemo(
-    () => filterTemplates(TEMPLATE_CATALOG, filters),
-    [filters]
+    () => filterTemplates(templates, filters),
+    [filters, templates]
   );
 
   return (

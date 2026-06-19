@@ -1,8 +1,10 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
+import { AuthProvider } from "@/components/auth-provider";
 import "./globals.css";
 import { Header } from "@/components/header";
 import { BrandProvider } from "@/components/brand-provider";
+import { CatalogProvider } from "@/components/catalog-provider";
 
 const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
 
@@ -12,6 +14,8 @@ export const metadata: Metadata = {
     "Browse, customize, and export pro motion graphics hooks in seconds. No After Effects required.",
 };
 
+export const dynamic = "force-dynamic";
+
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -20,10 +24,14 @@ export default function RootLayout({
   return (
     <html lang="en" className={inter.variable}>
       <body>
-        <BrandProvider>
-          <Header />
-          <main>{children}</main>
-        </BrandProvider>
+        <AuthProvider>
+          <BrandProvider>
+            <CatalogProvider>
+              <Header />
+              <main>{children}</main>
+            </CatalogProvider>
+          </BrandProvider>
+        </AuthProvider>
       </body>
     </html>
   );

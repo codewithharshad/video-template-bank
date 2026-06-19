@@ -5,13 +5,13 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { ArrowLeft } from "lucide-react";
 import {
-  getTemplateBySlug,
   getDefaultProps,
   applyBrandToProps,
   CATEGORY_LABELS,
   CREATOR_LABELS,
   type HookTemplate,
 } from "@video-lib/template-sdk";
+import { useTemplateBySlug } from "@/components/catalog-provider";
 import { TemplatePreview } from "@/components/template-preview";
 import { PropsEditor } from "@/components/props-editor";
 import { ExportPanel } from "@/components/export-panel";
@@ -29,7 +29,7 @@ export function TemplateEditor({
   backHref: string;
   backLabel: string;
 }) {
-  const template = getTemplateBySlug(slug);
+  const template = useTemplateBySlug(slug);
   const { brand } = useBrand();
 
   const initialProps = useMemo(() => {

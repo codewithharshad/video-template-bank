@@ -1,0 +1,28 @@
+export const COMPOSITION_IDS = [
+  "BoldTitleHook",
+  "CounterReveal",
+  "GradientTextReveal",
+  "ThreePointReveal",
+  "QuoteSpotlight",
+  "ZoomTransition",
+  "SaasMetricCard",
+  "FinanceMarketAlert",
+  "ComparisonBars",
+  "YouTubeEngagement",
+  "YouTubeSubscribeBanner",
+  "YouTubeLikeButton",
+  "YouTubeLiveBadge",
+  "InstagramProfileBanner",
+  "InstagramHeartNotification",
+  "TikTokCommentPopup",
+  "ChatOverlay",
+  "IMessageNotification",
+  "DiscordCall",
+  "KickProfile",
+  "FollowNotification",
+  "LogoReveal",
+  "BrowserAddressBar",
+  "SearchBarTyping",
+] as const;
+
+export type CompositionId = (typeof COMPOSITION_IDS)[number];

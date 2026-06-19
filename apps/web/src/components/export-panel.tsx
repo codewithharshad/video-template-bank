@@ -12,6 +12,8 @@ import {
   Sparkles,
   X,
 } from "lucide-react";
+import { useCatalog } from "@/components/catalog-provider";
+import Link from "next/link";
 import {
   exportVideo,
   getExportDimensions,
@@ -36,6 +38,7 @@ export function ExportPanel({
   transparent,
   onTransparentChange,
 }: ExportPanelProps) {
+  const { user, refreshUser } = useCatalog();
   const isOverlay = isOverlayTemplate(template);
   const isContentExport = fitsContentExport(template);
   const solidProLocked = isOverlay && !template.isPro;
@@ -109,6 +112,7 @@ export function ExportPanel({
       });
       setResolvedConfig(used);
       setSuccess(true);
+      void refreshUser();
       setTimeout(() => setSuccess(false), 4000);
     } catch (err) {
       const message =
@@ -138,6 +142,40 @@ export function ExportPanel({
       </div>
 
       <div className="space-y-4">
+        {!user && (
+          <div className="flex gap-2 rounded-lg border border-violet-500/30 bg-violet-500/10 p-3 text-xs text-violet-200">
+            <AlertCircle className="mt-0.5 h-4 w-4 shrink-0" />
+            <span>
+              <Link href="/sign-in" className="underline hover:text-white">
+                Sign in
+              </Link>{" "}
+              to export, save downloads, and use credits — 20 free on signup.
+            </span>
+          </div>
+        )}
+
+        {user && user.plan !== "pro" && (
+          <div className="flex items-center justify-between rounded-lg border border-zinc-800 bg-zinc-900/80 px-3 py-2 text-xs">
+            <span className="text-zinc-400">
+              {resolution === "1080p" ? "2 credits" : "1 credit"} per export
+            </span>
+            <span className="font-medium text-zinc-200">{user.credits} left</span>
+          </div>
+        )}
+
+        {user && template.isPro && user.plan === "free" && (
+          <div className="flex gap-2 rounded-lg border border-amber-500/30 bg-amber-500/10 p-3 text-xs text-amber-200">
+            <Crown className="mt-0.5 h-4 w-4 shrink-0" />
+            <span>
+              Pro template — upgrade to{" "}
+              <Link href="/pricing" className="underline hover:text-white">
+                Creator or Pro
+              </Link>{" "}
+              to export.
+            </span>
+          </div>
+        )}
+
         {isContentExport && (
           <button
             type="button"
@@ -197,8 +235,8 @@ export function ExportPanel({
           <div className="flex gap-2 rounded-lg border border-amber-500/30 bg-amber-500/10 p-3 text-xs text-amber-200">
             <AlertCircle className="mt-0.5 h-4 w-4 shrink-0" />
             <span>
-              {serverMessage} Using browser {resolvedConfig.label} instead — Chrome
-              recommended.
+              ProRes MOV isn&apos;t available yet ({serverMessage}). Using browser{" "}
+              {resolvedConfig.label} instead — Chrome recommended.
             </span>
           </div>
         )}
@@ -296,7 +334,9 @@ export function ExportPanel({
           disabled={
             exporting ||
             !!unsupportedMessage ||
-            (solidProLocked && !transparent)
+            (solidProLocked && !transparent) ||
+            !user ||
+            (user.plan === "free" && template.isPro)
           }
           className="flex w-full items-center justify-center gap-2 rounded-xl bg-violet-600 py-3 font-medium text-white transition-colors hover:bg-violet-500 disabled:cursor-not-allowed disabled:opacity-60"
         >

@@ -2,18 +2,19 @@
 
 import { useMemo, useState } from "react";
 import {
-  TEMPLATE_CATALOG,
   filterTemplates,
   OVERLAY_PLATFORM_LABELS,
   type FilterState,
   type OverlayPlatform,
 } from "@video-lib/template-sdk";
+import { useCatalog } from "@/components/catalog-provider";
 import { TemplateCard } from "@/components/template-card";
 import { FilterSidebar, SearchBar } from "@/components/filter-sidebar";
 import { BrandKitPanel } from "@/components/brand-kit-panel";
 import { cn } from "@/lib/utils";
 
 export default function EffectsPage() {
+  const { templates } = useCatalog();
   const platformTabs = useMemo(
     () =>
       Object.entries(OVERLAY_PLATFORM_LABELS ?? {}) as [
@@ -36,10 +37,10 @@ export default function EffectsPage() {
   const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false);
 
   const filtered = useMemo(() => {
-    const base = filterTemplates(TEMPLATE_CATALOG, filters);
+    const base = filterTemplates(templates, filters);
     if (platformTab === "all") return base;
     return base.filter((t) => t.overlayPlatform === platformTab);
-  }, [filters, platformTab]);
+  }, [filters, platformTab, templates]);
 
   return (
     <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6">

@@ -49,6 +49,28 @@ export async function exportVideoOnServer(options: {
     throw new Error(data?.error ?? `Server export failed (${res.status}).`);
   }
 
+  const contentType = res.headers.get("Content-Type") ?? "";
+  if (contentType.includes("application/json")) {
+    const data = (await res.json()) as {
+      saved: boolean;
+      exportId: string;
+      downloadUrl: string;
+      filename: string;
+      width: number;
+      height: number;
+      transparent: boolean;
+    };
+    onProgress?.(1);
+    window.open(data.downloadUrl, "_blank");
+    return {
+      filename: data.filename,
+      width: data.width,
+      height: data.height,
+      transparent: data.transparent,
+      source: "server",
+    };
+  }
+
   const width = Number(res.headers.get("X-Export-Width") ?? 0);
   const height = Number(res.headers.get("X-Export-Height") ?? 0);
   const transparent = res.headers.get("X-Export-Transparent") === "true";

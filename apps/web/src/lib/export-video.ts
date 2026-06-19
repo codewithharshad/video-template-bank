@@ -326,7 +326,21 @@ async function exportVideoInBrowser(
   const tier = resolutionLabel(resolution);
   const alphaTag = wantsAlpha ? "transparent" : "solid";
   const filename = `hookforge-${template.slug}-${tier}-${alphaTag}-${Date.now()}.${extension}`;
-  downloadBlob(blob, filename);
+
+  try {
+    const { saveBrowserExport } = await import("@/lib/save-export");
+    await saveBrowserExport({
+      blob,
+      slug: template.slug,
+      format,
+      resolution,
+      transparent: wantsAlpha,
+      inputProps: coerced,
+      filename,
+    });
+  } catch {
+    downloadBlob(blob, filename);
+  }
 
   return { ...support.resolved, width, height, source: "browser" };
 }

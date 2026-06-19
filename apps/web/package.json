@@ -7,20 +7,27 @@
     "dev": "next dev -p 3000",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "db:push": "npm run db:push --workspace=@video-lib/database"
   },
   "dependencies": {
+    "@clerk/nextjs": "^6.22.0",
     "@remotion/player": "^4.0.286",
     "@remotion/bundler": "^4.0.286",
     "@remotion/renderer": "^4.0.286",
     "@remotion/web-renderer": "^4.0.286",
+    "@vercel/blob": "^1.1.1",
+    "@video-lib/database": "*",
     "@video-lib/template-sdk": "*",
     "clsx": "^2.1.1",
+    "drizzle-orm": "^0.44.0",
     "lucide-react": "^0.511.0",
     "next": "^15.3.3",
     "react": "^19.1.0",
     "react-dom": "^19.1.0",
     "remotion": "^4.0.286",
+    "stripe": "^18.0.0",
+    "svix": "^1.65.0",
     "tailwind-merge": "^3.3.0"
   },
   "devDependencies": {

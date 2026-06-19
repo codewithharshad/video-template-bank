@@ -62,7 +62,9 @@ video-lib/
 
 ### Server export setup (transparent MOV)
 
-Requires **ffmpeg** on your machine:
+**Production (animably.com):** deploy the render worker — see [`apps/render-worker/README.md`](apps/render-worker/README.md). Set `RENDER_WORKER_URL` and `RENDER_WORKER_SECRET` on Vercel.
+
+**Local dev** requires **ffmpeg**:
 
 ```bash
 brew install ffmpeg
