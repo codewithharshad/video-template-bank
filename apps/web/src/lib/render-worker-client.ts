@@ -30,7 +30,7 @@ export async function checkRenderWorkerHealth(): Promise<{
 
   try {
     const res = await fetch(`${config.url}/health`, {
-      headers: workerHeaders(config.secret),
+      headers: { Authorization: `Bearer ${config.secret}` },
       cache: "no-store",
     });
     if (!res.ok) {

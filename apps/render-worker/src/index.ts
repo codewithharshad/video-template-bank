@@ -1,6 +1,6 @@
 import { serve } from "@hono/node-server";
 import { Hono } from "hono";
-import { getTemplateBySlug } from "@video-lib/template-sdk";
+import { getTemplateBySlug } from "../../../packages/template-sdk/src/catalog.ts";
 import type { HookTemplate } from "@video-lib/template-sdk";
 import {
   checkRenderEngineHealth,
@@ -16,11 +16,6 @@ const app = new Hono();
 const port = Number(process.env.PORT ?? 8080);
 const secret = process.env.RENDER_WORKER_SECRET;
 
-if (!secret) {
-  console.error("RENDER_WORKER_SECRET is required.");
-  process.exit(1);
-}
-
 if (!process.env.REMOTION_ENTRYPOINT) {
   process.env.REMOTION_ENTRYPOINT = new URL(
     "../../web/src/remotion/register-root.ts",
@@ -28,12 +23,19 @@ if (!process.env.REMOTION_ENTRYPOINT) {
   ).pathname;
 }
 
+/** Fast check for Railway/load balancers — no Remotion webpack bundle. */
 app.get("/health", async (c) => {
-  const health = await checkRenderEngineHealth();
-  return c.json(health);
+  const health = await checkRenderEngineHealth({ deep: false });
+  return c.json(health, health.available ? 200 : 503);
 });
 
 app.use("/render", async (c, next) => {
+  if (!secret) {
+    return c.json(
+      { error: "RENDER_WORKER_SECRET is not configured on this service." },
+      503
+    );
+  }
   const auth = c.req.header("Authorization");
   if (auth !== `Bearer ${secret}`) {
     return c.json({ error: "Unauthorized" }, 401);
@@ -98,5 +100,11 @@ app.post("/render", async (c) => {
   }
 });
 
-console.log(`Render worker listening on :${port}`);
-serve({ fetch: app.fetch, port });
+if (!secret) {
+  console.warn(
+    "RENDER_WORKER_SECRET is not set — /health works but /render is disabled until you add it in Railway Variables."
+  );
+}
+
+console.log(`Render worker listening on 0.0.0.0:${port}`);
+serve({ fetch: app.fetch, port, hostname: "0.0.0.0" });

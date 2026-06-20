@@ -4,9 +4,9 @@ import os from "node:os";
 import path from "node:path";
 import type { HookTemplate } from "@video-lib/template-sdk";
 import { getTemplateBySlug } from "@video-lib/template-sdk";
-import { coerceTemplateProps } from "@/lib/coerce-props";
-import { getExportDimensions, type ExportResolution } from "@/lib/export-dimensions";
-import { prepareExportProps, resolutionLabel } from "@/lib/export-props";
+import { coerceTemplateProps } from "./coerce-props";
+import { getExportDimensions, type ExportResolution } from "./export-dimensions";
+import { prepareExportProps, resolutionLabel } from "./export-props";
 
 export type ServerExportMode = "transparent" | "solid";
 
@@ -55,7 +55,7 @@ async function resolveTemplate(
   }
 
   try {
-    const { getTemplateBySlugMerged } = await import("@/lib/catalog");
+    const { getTemplateBySlugMerged } = await import("./catalog");
     return getTemplateBySlugMerged(request.slug);
   } catch {
     return getTemplateBySlug(request.slug);
@@ -66,7 +66,10 @@ export function isServerExportEnabled(): boolean {
   return process.env.ENABLE_SERVER_EXPORT !== "false";
 }
 
-export async function checkRenderEngineHealth(): Promise<{
+export async function checkRenderEngineHealth(options?: {
+  /** When false, only checks ffmpeg (fast — use for load balancers). */
+  deep?: boolean;
+}): Promise<{
   available: boolean;
   ffmpeg: boolean;
   message?: string;
@@ -89,6 +92,10 @@ export async function checkRenderEngineHealth(): Promise<{
       ffmpeg: false,
       message: "ffmpeg is not installed on this render host.",
     };
+  }
+
+  if (!options?.deep) {
+    return { available: true, ffmpeg: true };
   }
 
   try {
