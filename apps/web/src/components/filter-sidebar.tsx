@@ -232,8 +232,8 @@ export function SearchBar({
 }: {
   value: string;
   onChange: (v: string) => void;
-  sort: "newest" | "popular";
-  onSortChange: (s: "newest" | "popular") => void;
+  sort: "newest" | "popular" | "render-cost";
+  onSortChange: (s: "newest" | "popular" | "render-cost") => void;
   onOpenFilters: () => void;
 }) {
   return (
@@ -261,11 +261,14 @@ export function SearchBar({
 
         <select
           value={sort}
-          onChange={(e) => onSortChange(e.target.value as "newest" | "popular")}
+          onChange={(e) =>
+            onSortChange(e.target.value as "newest" | "popular" | "render-cost")
+          }
           className="rounded-xl border border-zinc-800 bg-zinc-900/60 px-4 py-2.5 text-sm text-zinc-300 focus:outline-none"
         >
           <option value="newest">Newest</option>
           <option value="popular">Most Popular</option>
+          <option value="render-cost">Render cost (high → low)</option>
         </select>
       </div>
     </div>

@@ -9,6 +9,7 @@ import { useCatalog } from "@/components/catalog-provider";
 import { TemplateCard } from "@/components/template-card";
 import { FilterSidebar, SearchBar } from "@/components/filter-sidebar";
 import { BrandKitPanel } from "@/components/brand-kit-panel";
+import { sortTemplatesByRenderCost } from "@/lib/render-cost";
 
 export default function HooksPage() {
   const { templates } = useCatalog();
@@ -24,10 +25,13 @@ export default function HooksPage() {
   });
   const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false);
 
-  const filtered = useMemo(
-    () => filterTemplates(templates, filters),
-    [filters, templates]
-  );
+  const filtered = useMemo(() => {
+    const base = filterTemplates(templates, filters);
+    if (filters.sort === "render-cost") {
+      return sortTemplatesByRenderCost(base);
+    }
+    return base;
+  }, [filters, templates]);
 
   return (
     <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6">

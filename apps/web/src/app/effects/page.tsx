@@ -11,6 +11,7 @@ import { useCatalog } from "@/components/catalog-provider";
 import { TemplateCard } from "@/components/template-card";
 import { FilterSidebar, SearchBar } from "@/components/filter-sidebar";
 import { BrandKitPanel } from "@/components/brand-kit-panel";
+import { sortTemplatesByRenderCost } from "@/lib/render-cost";
 import { cn } from "@/lib/utils";
 
 export default function EffectsPage() {
@@ -38,8 +39,14 @@ export default function EffectsPage() {
 
   const filtered = useMemo(() => {
     const base = filterTemplates(templates, filters);
-    if (platformTab === "all") return base;
-    return base.filter((t) => t.overlayPlatform === platformTab);
+    const scoped =
+      platformTab === "all"
+        ? base
+        : base.filter((t) => t.overlayPlatform === platformTab);
+    if (filters.sort === "render-cost") {
+      return sortTemplatesByRenderCost(scoped);
+    }
+    return scoped;
   }, [filters, platformTab, templates]);
 
   return (

@@ -122,5 +122,5 @@ export interface FilterState {
   templateKind: TemplateKind | null;
   orientation: Orientation | null;
   search: string;
-  sort: "newest" | "popular";
+  sort: "newest" | "popular" | "render-cost";
 }

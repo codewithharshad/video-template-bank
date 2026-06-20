@@ -318,7 +318,7 @@ export function filterTemplates(
     templateKind?: string | null;
     orientation?: string | null;
     search?: string;
-    sort?: "newest" | "popular";
+    sort?: "newest" | "popular" | "render-cost";
   }
 ): HookTemplate[] {
   let result = [...templates];
