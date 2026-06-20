@@ -32,10 +32,11 @@ WORKDIR /app
 
 COPY package.json package-lock.json ./
 COPY packages packages
+COPY apps/web/package.json apps/web/package.json
 COPY apps/web/src apps/web/src
 COPY apps/render-worker apps/render-worker
 
-RUN npm ci
+RUN npm ci --workspace=@video-lib/render-worker --include-workspace-root
 
 WORKDIR /app/apps/render-worker
 

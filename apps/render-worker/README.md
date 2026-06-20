@@ -15,14 +15,15 @@ Health: `GET http://localhost:8080/health`
 
 ## Deploy on Railway
 
+> **Only deploy `@video-lib/render-worker` on Railway.** Your Next.js app (`@video-lib/web`) should stay on **Vercel** — delete the `@video-lib/web` service from Railway if it was auto-created.
+
 1. Create a new project at [railway.app](https://railway.app) → **Deploy from GitHub repo**
-2. Set **Root Directory** to repo root (default)
-3. Railway reads `apps/render-worker/railway.toml` and builds the Dockerfile
-4. Add environment variables:
+2. Add **one service** for the render worker (uses `apps/render-worker/railway.toml` + Dockerfile)
+3. Add environment variables on the **render-worker** service:
    - `RENDER_WORKER_SECRET` — generate with `openssl rand -hex 32`
    - `PORT` — Railway sets this automatically
-   - `REMOTION_ENTRYPOINT` — `/app/apps/web/src/remotion/register-root.ts` (set in Dockerfile)
-5. Deploy and copy the public URL (e.g. `https://your-app.up.railway.app`)
+4. Deploy and copy the public URL (e.g. `https://your-app.up.railway.app`)
+5. If build fails, open **Deployments → View logs** — usually a missing env var or monorepo workspace issue (fixed in latest Dockerfile)
 
 ## Connect Vercel
 

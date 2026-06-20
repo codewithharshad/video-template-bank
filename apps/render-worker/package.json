@@ -17,11 +17,11 @@
     "hono": "^4.7.11",
     "react": "^19.1.0",
     "react-dom": "^19.1.0",
-    "remotion": "^4.0.286"
+    "remotion": "^4.0.286",
+    "tsx": "^4.19.4"
   },
   "devDependencies": {
     "@types/node": "^22.15.21",
-    "tsx": "^4.19.4",
     "typescript": "^5.8.3"
   }
 }
