@@ -29,6 +29,32 @@ export interface ServerExportResult {
 
 let bundleLocationPromise: Promise<string> | null = null;
 
+function getRenderConcurrency(): number | undefined {
+  const raw = process.env.REMOTION_CONCURRENCY ?? process.env.RENDER_CONCURRENCY;
+  if (raw !== undefined && raw !== "") {
+    const parsed = Number(raw);
+    if (Number.isFinite(parsed) && parsed > 0) {
+      return Math.floor(parsed);
+    }
+  }
+  // ProRes 4444 + PNG frames is memory-heavy — keep low on remote workers.
+  if (process.env.RENDER_WORKER_SECRET || process.env.RAILWAY_ENVIRONMENT) {
+    return 1;
+  }
+  return undefined;
+}
+
+function formatRenderFailure(error: unknown): Error {
+  const message = error instanceof Error ? error.message : String(error);
+  if (/SIGKILL|sigkill|killed|out of memory|ENOMEM/i.test(message)) {
+    return new Error(
+      "Export ran out of memory on the render server (ProRes 4444 is heavy). " +
+        "Upgrade Railway to at least 4–8 GB RAM, or use browser WebM export."
+    );
+  }
+  return error instanceof Error ? error : new Error(message);
+}
+
 function getEntryPoint(): string {
   if (process.env.REMOTION_ENTRYPOINT) {
     return process.env.REMOTION_ENTRYPOINT;
@@ -147,25 +173,32 @@ export async function renderTemplateOnServer(
   const alphaTag = transparent ? "transparent" : "solid";
   const filename = `hookforge-${template.slug}-${tier}-${alphaTag}-${Date.now()}.mov`;
   const outputLocation = path.join(os.tmpdir(), filename);
+  const concurrency = getRenderConcurrency();
 
-  await renderMedia({
-    composition: {
-      ...composition,
-      width,
-      height,
-    },
-    serveUrl,
-    codec: transparent ? "prores" : "h264",
-    proResProfile: transparent ? "4444" : undefined,
-    pixelFormat: transparent ? "yuva444p10le" : "yuv420p",
-    imageFormat: transparent ? "png" : "jpeg",
-    inputProps: exportProps,
-    outputLocation,
-    muted: true,
-    onProgress: ({ progress }) => {
-      onProgress?.(progress);
-    },
-  });
+  try {
+    await renderMedia({
+      composition: {
+        ...composition,
+        width,
+        height,
+      },
+      serveUrl,
+      codec: transparent ? "prores" : "h264",
+      proResProfile: transparent ? "4444" : undefined,
+      pixelFormat: transparent ? "yuva444p10le" : "yuv420p",
+      imageFormat: transparent ? "png" : "jpeg",
+      inputProps: exportProps,
+      outputLocation,
+      muted: true,
+      ...(concurrency !== undefined ? { concurrency } : {}),
+      ffmpegOverride: ({ args }) => [...args, "-threads", "1"],
+      onProgress: ({ progress }) => {
+        onProgress?.(progress);
+      },
+    });
+  } catch (error) {
+    throw formatRenderFailure(error);
+  }
 
   return {
     filePath: outputLocation,

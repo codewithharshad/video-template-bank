@@ -44,4 +44,15 @@ Redeploy Vercel. `/api/export/health` will report `available: true` and visitors
 
 ## Sizing
 
-Start with Railway **2 vCPU / 4 GB RAM**. ProRes renders are CPU-heavy; scale up if exports time out.
+**ProRes 4444 transparent MOV needs a lot of RAM.** If you see `FFmpeg quit with code null (SIGKILL)`, Railway ran out of memory.
+
+1. Railway → **render-worker** → **Settings** → **Resources**
+2. Set **Memory to 8 GB** (minimum **4 GB** for short overlays)
+3. Redeploy
+
+Optional env vars on the worker:
+
+| Variable | Default on Railway | Purpose |
+|----------|-------------------|---------|
+| `REMOTION_CONCURRENCY` | `1` | Parallel frame renders (keep at 1 on small instances) |
+| `RENDER_CONCURRENCY` | same as above | Alias for `REMOTION_CONCURRENCY` |

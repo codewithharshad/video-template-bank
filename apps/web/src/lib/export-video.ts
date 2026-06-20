@@ -327,18 +327,23 @@ async function exportVideoInBrowser(
   const alphaTag = wantsAlpha ? "transparent" : "solid";
   const filename = `hookforge-${template.slug}-${tier}-${alphaTag}-${Date.now()}.${extension}`;
 
-  try {
-    const { saveBrowserExport } = await import("@/lib/save-export");
-    await saveBrowserExport({
-      blob,
-      slug: template.slug,
-      format,
-      resolution,
-      transparent: wantsAlpha,
-      inputProps: coerced,
-      filename,
-    });
-  } catch {
+  const { isAuthEnabled } = await import("@/lib/auth/clerk-config");
+  if (isAuthEnabled()) {
+    try {
+      const { saveBrowserExport } = await import("@/lib/save-export");
+      await saveBrowserExport({
+        blob,
+        slug: template.slug,
+        format,
+        resolution,
+        transparent: wantsAlpha,
+        inputProps: coerced,
+        filename,
+      });
+    } catch {
+      downloadBlob(blob, filename);
+    }
+  } else {
     downloadBlob(blob, filename);
   }
 

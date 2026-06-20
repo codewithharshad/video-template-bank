@@ -6,6 +6,7 @@ import { canAffordExport } from "@/lib/credits";
 import { getTemplateBySlugMerged } from "@/lib/catalog";
 import { saveExportToBlob } from "@/lib/exports/storage";
 import { isDatabaseConfigured } from "@video-lib/database";
+import { isAuthEnabled } from "@/lib/auth/clerk-config";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -34,7 +35,8 @@ export async function POST(request: Request) {
     const resolution: ExportResolution =
       body.resolution === "720p" ? "720p" : "1080p";
     const inputProps = body.inputProps ?? {};
-    const shouldSave = body.save !== false && isDatabaseConfigured();
+    const shouldSave =
+      isAuthEnabled() && body.save !== false && isDatabaseConfigured();
 
     const template = await getTemplateBySlugMerged(body.slug);
     if (!template) {

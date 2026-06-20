@@ -13,6 +13,7 @@ import {
   X,
 } from "lucide-react";
 import { useCatalog } from "@/components/catalog-provider";
+import { isAuthEnabled } from "@/lib/auth/clerk-config";
 import Link from "next/link";
 import {
   exportVideo,
@@ -39,6 +40,7 @@ export function ExportPanel({
   onTransparentChange,
 }: ExportPanelProps) {
   const { user, refreshUser } = useCatalog();
+  const authEnabled = isAuthEnabled();
   const isOverlay = isOverlayTemplate(template);
   const isContentExport = fitsContentExport(template);
   const solidProLocked = isOverlay && !template.isPro;
@@ -142,7 +144,7 @@ export function ExportPanel({
       </div>
 
       <div className="space-y-4">
-        {!user && (
+        {authEnabled && !user && (
           <div className="flex gap-2 rounded-lg border border-violet-500/30 bg-violet-500/10 p-3 text-xs text-violet-200">
             <AlertCircle className="mt-0.5 h-4 w-4 shrink-0" />
             <span>
@@ -154,7 +156,7 @@ export function ExportPanel({
           </div>
         )}
 
-        {user && user.plan !== "pro" && (
+        {authEnabled && user && user.plan !== "pro" && (
           <div className="flex items-center justify-between rounded-lg border border-zinc-800 bg-zinc-900/80 px-3 py-2 text-xs">
             <span className="text-zinc-400">
               {resolution === "1080p" ? "2 credits" : "1 credit"} per export
@@ -163,7 +165,7 @@ export function ExportPanel({
           </div>
         )}
 
-        {user && template.isPro && user.plan === "free" && (
+        {authEnabled && user && template.isPro && user.plan === "free" && (
           <div className="flex gap-2 rounded-lg border border-amber-500/30 bg-amber-500/10 p-3 text-xs text-amber-200">
             <Crown className="mt-0.5 h-4 w-4 shrink-0" />
             <span>
@@ -335,8 +337,8 @@ export function ExportPanel({
             exporting ||
             !!unsupportedMessage ||
             (solidProLocked && !transparent) ||
-            !user ||
-            (user.plan === "free" && template.isPro)
+            (authEnabled && !user) ||
+            (authEnabled && user?.plan === "free" && template.isPro)
           }
           className="flex w-full items-center justify-center gap-2 rounded-xl bg-violet-600 py-3 font-medium text-white transition-colors hover:bg-violet-500 disabled:cursor-not-allowed disabled:opacity-60"
         >

@@ -7,7 +7,7 @@ import {
   type User,
   type UserPlan,
 } from "@video-lib/database";
-import { isClerkConfigured } from "@/lib/auth/clerk-config";
+import { isClerkConfigured, isAuthEnabled } from "@/lib/auth/clerk-config";
 
 const SIGNUP_CREDITS = 20;
 
@@ -31,7 +31,7 @@ export async function requireAuthUserId() {
 }
 
 export async function getCurrentDbUser(): Promise<User | null> {
-  if (!isDatabaseConfigured() || !isClerkConfigured()) {
+  if (!isAuthEnabled() || !isDatabaseConfigured() || !isClerkConfigured()) {
     return null;
   }
 
