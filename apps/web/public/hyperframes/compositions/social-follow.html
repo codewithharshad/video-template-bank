@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html, body { overflow: hidden; }
+    [data-composition-id="social-follow"] {
+      font-family: system-ui, -apple-system, sans-serif;
+      background: transparent;
+      display: flex;
+      align-items: flex-end;
+      justify-content: flex-start;
+      padding: 60px;
+    }
+    [data-composition-id="social-follow"] .card {
+      background: rgba(255,255,255,0.95);
+      backdrop-filter: blur(20px);
+      border-radius: 20px;
+      padding: 24px 28px;
+      display: flex;
+      align-items: center;
+      gap: 20px;
+      box-shadow: 0 8px 40px rgba(0,0,0,0.15);
+      min-width: 420px;
+    }
+    [data-composition-id="social-follow"] .avatar {
+      width: 64px;
+      height: 64px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #8b5cf6, #ec4899);
+      flex-shrink: 0;
+    }
+    [data-composition-id="social-follow"] .info { flex: 1; }
+    [data-composition-id="social-follow"] .name {
+      font-size: 20px;
+      font-weight: 700;
+      color: #111;
+    }
+    [data-composition-id="social-follow"] .handle {
+      font-size: 15px;
+      color: #666;
+      margin-top: 2px;
+    }
+    [data-composition-id="social-follow"] .follow-btn {
+      background: #111;
+      color: #fff;
+      border: none;
+      padding: 12px 28px;
+      border-radius: 100px;
+      font-size: 15px;
+      font-weight: 600;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+  <div
+    id="root"
+    data-composition-id="social-follow"
+    data-start="0"
+    data-width="1920"
+    data-height="1080"
+  >
+    <div class="card">
+      <div class="avatar"></div>
+      <div class="info">
+        <div class="name">@hookforge</div>
+        <div class="handle">Motion graphics for creators</div>
+      </div>
+      <button class="follow-btn">Follow</button>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3/dist/gsap.min.js"></script>
+    <script>
+      const tl = gsap.timeline({ paused: true });
+      tl.from(".card", { y: 60, opacity: 0, duration: 0.6, ease: "power3.out" })
+        .from(".avatar", { scale: 0, duration: 0.5, ease: "back.out(2)" }, "-=0.3")
+        .from(".name", { x: -20, opacity: 0, duration: 0.4, ease: "power2.out" }, "-=0.2")
+        .from(".handle", { x: -20, opacity: 0, duration: 0.3, ease: "power2.out" }, "-=0.2")
+        .from(".follow-btn", { scale: 0.8, opacity: 0, duration: 0.4, ease: "back.out(2)" }, "-=0.1");
+
+      window.__timelines = window.__timelines || {};
+      window.__timelines["social-follow"] = tl;
+    </script>
+  </div>
+</body>
+</html>

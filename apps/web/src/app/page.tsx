@@ -1,6 +1,7 @@
 import Link from "next/link";
 import {
   ArrowRight,
+  Code2,
   Layers,
   Palette,
   Sparkles,
@@ -120,6 +121,56 @@ export default function HomePage() {
               <p className="mt-2 text-sm text-zinc-400">{feature.description}</p>
             </div>
           ))}
+        </div>
+      </section>
+
+      {/* HyperFrames */}
+      <section className="border-t border-zinc-800/50 bg-zinc-900/20">
+        <div className="mx-auto max-w-7xl px-4 py-24 sm:px-6">
+          <div className="grid items-center gap-12 lg:grid-cols-2">
+            <div>
+              <div className="mb-4 inline-flex items-center gap-2 rounded-full border border-amber-500/30 bg-amber-500/10 px-4 py-1.5 text-sm text-amber-300">
+                <Code2 className="h-4 w-4" />
+                New — HyperFrames
+              </div>
+              <h2 className="text-3xl font-bold">
+                Compose videos with{" "}
+                <span className="bg-gradient-to-r from-amber-400 to-cyan-400 bg-clip-text text-transparent">
+                  HTML &amp; CSS
+                </span>
+              </h2>
+              <p className="mt-4 text-zinc-400">
+                Write HTML, animate with GSAP, render to MP4. Browse example
+                compositions, preview live in the browser, and download source
+                files to remix in your own projects.
+              </p>
+              <Link
+                href="/hyperframes"
+                className="mt-8 inline-flex items-center gap-2 rounded-full bg-amber-500 px-8 py-3.5 font-medium text-zinc-950 transition-colors hover:bg-amber-400"
+              >
+                Explore HyperFrames
+                <ArrowRight className="h-4 w-4" />
+              </Link>
+            </div>
+
+            <div className="grid grid-cols-2 gap-3">
+              {[
+                { label: "Kinetic Type", color: "from-orange-500/20 to-amber-500/10" },
+                { label: "Data Chart", color: "from-amber-600/20 to-orange-500/10" },
+                { label: "Product Promo", color: "from-violet-500/20 to-purple-500/10" },
+                { label: "Code Reveal", color: "from-cyan-500/20 to-blue-500/10" },
+              ].map((item) => (
+                <div
+                  key={item.label}
+                  className={`flex aspect-video items-end rounded-xl border border-zinc-800 bg-gradient-to-br ${item.color} p-4`}
+                >
+                  <span className="text-sm font-medium text-zinc-300">
+                    {item.label}
+                  </span>
+                </div>
+              ))}
+            </div>
+          </div>
         </div>
       </section>
 

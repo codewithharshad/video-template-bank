@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { background: #000; overflow: hidden; }
+    [data-composition-id="kinetic-type"] {
+      font-family: system-ui, -apple-system, sans-serif;
+      background: linear-gradient(135deg, #0c0c0c 0%, #1a1a2e 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+    }
+    [data-composition-id="kinetic-type"] .word {
+      font-size: 140px;
+      font-weight: 900;
+      text-transform: uppercase;
+      letter-spacing: -0.04em;
+      line-height: 1;
+      position: absolute;
+    }
+    [data-composition-id="kinetic-type"] .word-1 { color: #fff; }
+    [data-composition-id="kinetic-type"] .word-2 { color: #f97316; }
+    [data-composition-id="kinetic-type"] .word-3 { color: #06b6d4; font-size: 80px; bottom: 280px; }
+    [data-composition-id="kinetic-type"] .accent {
+      position: absolute;
+      width: 120px;
+      height: 8px;
+      background: #f97316;
+      border-radius: 4px;
+    }
+  </style>
+</head>
+<body>
+  <div
+    id="root"
+    data-composition-id="kinetic-type"
+    data-start="0"
+    data-width="1920"
+    data-height="1080"
+  >
+    <span class="word word-1">KINETIC</span>
+    <span class="word word-2">TYPE</span>
+    <span class="word word-3">motion by code</span>
+    <div class="accent"></div>
+
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3/dist/gsap.min.js"></script>
+    <script>
+      const tl = gsap.timeline({ paused: true });
+      tl.from(".word-1", { x: -400, opacity: 0, rotation: -5, duration: 0.7, ease: "power4.out" })
+        .from(".word-2", { x: 400, opacity: 0, rotation: 5, duration: 0.7, ease: "power4.out" }, "-=0.4")
+        .from(".accent", { scaleX: 0, duration: 0.4, ease: "power2.out" }, "-=0.2")
+        .from(".word-3", { y: 40, opacity: 0, duration: 0.5, ease: "power2.out" }, "-=0.1")
+        .to(".word-1", { y: -20, duration: 0.8, ease: "sine.inOut" })
+        .to(".word-2", { y: 20, duration: 0.8, ease: "sine.inOut" }, "<");
+
+      window.__timelines = window.__timelines || {};
+      window.__timelines["kinetic-type"] = tl;
+    </script>
+  </div>
+</body>
+</html>

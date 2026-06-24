@@ -33,6 +33,12 @@ export function Header() {
           <Link href="/effects" className="transition-colors hover:text-white">
             Video Effects
           </Link>
+          <Link
+            href="/hyperframes"
+            className="transition-colors hover:text-white"
+          >
+            HyperFrames
+          </Link>
           {authEnabled && (
             <Link href="/pricing" className="transition-colors hover:text-white">
               Pricing
