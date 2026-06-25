@@ -61,12 +61,12 @@ export default function EffectsPage() {
         </p>
       </div>
 
-      <div className="mb-6 flex justify-center gap-2 overflow-x-auto pb-2">
+      <div className="mb-6 flex flex-wrap justify-center gap-2">
         <button
           type="button"
           onClick={() => setPlatformTab("all")}
           className={cn(
-            "shrink-0 rounded-full px-4 py-2 text-sm font-medium transition-colors",
+            "rounded-full px-3 py-1.5 text-xs font-medium transition-colors sm:px-4 sm:py-2 sm:text-sm",
             platformTab === "all"
               ? "bg-amber-400 text-zinc-950"
               : "bg-zinc-800/80 text-zinc-400 hover:text-zinc-200"
@@ -80,7 +80,7 @@ export default function EffectsPage() {
             type="button"
             onClick={() => setPlatformTab(key)}
             className={cn(
-              "shrink-0 rounded-full px-4 py-2 text-sm font-medium transition-colors",
+              "rounded-full px-3 py-1.5 text-xs font-medium transition-colors sm:px-4 sm:py-2 sm:text-sm",
               platformTab === key
                 ? "bg-amber-400 text-zinc-950"
                 : "bg-zinc-800/80 text-zinc-400 hover:text-zinc-200"
