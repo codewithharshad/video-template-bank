@@ -1,16 +1,33 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { Check, Crown, Sparkles } from "lucide-react";
 import { PLANS } from "@/lib/payments/plans";
 import { useCatalog } from "@/components/catalog-provider";
 
 export default function PricingPage() {
+  const router = useRouter();
   const { user } = useCatalog();
   const [loading, setLoading] = useState<string | null>(null);
+  const [paymentsReady, setPaymentsReady] = useState<boolean | null>(null);
+
+  useEffect(() => {
+    void fetch("/api/payments/status")
+      .then((res) => res.json())
+      .then((data: { configured?: boolean }) =>
+        setPaymentsReady(Boolean(data.configured))
+      )
+      .catch(() => setPaymentsReady(false));
+  }, []);
 
   const handleCheckout = async (plan: "creator" | "pro") => {
+    if (!user) {
+      router.push(`/sign-in?redirect_url=${encodeURIComponent("/pricing")}`);
+      return;
+    }
+
     setLoading(plan);
     try {
       const res = await fetch("/api/payments/checkout", {
@@ -21,6 +38,8 @@ export default function PricingPage() {
       const data = (await res.json()) as { url?: string; error?: string };
       if (data.url) {
         window.location.href = data.url;
+      } else if (res.status === 401) {
+        router.push(`/sign-in?redirect_url=${encodeURIComponent("/pricing")}`);
       } else {
         alert(data.error ?? "Checkout unavailable. Please try again later.");
       }
@@ -36,12 +55,20 @@ export default function PricingPage() {
         <p className="mt-3 text-zinc-400">
           Start free with 20 credits. Upgrade when you need Pro templates and HD exports.
         </p>
+        {paymentsReady === false && (
+          <p className="mt-4 text-sm text-amber-400/90">
+            Paid upgrades are not live yet — free plan works as usual.
+          </p>
+        )}
       </div>
 
       <div className="grid gap-6 md:grid-cols-3">
         {Object.values(PLANS).map((plan) => {
           const isCurrent = user?.plan === plan.id;
           const isPro = plan.id === "pro";
+          const isPaid = plan.id !== "free";
+          const checkoutDisabled =
+            isPaid && (paymentsReady === false || isCurrent);
 
           return (
             <div
@@ -96,14 +123,18 @@ export default function PricingPage() {
                 <button
                   type="button"
                   onClick={() => handleCheckout(plan.id)}
-                  disabled={loading === plan.id || isCurrent}
+                  disabled={loading === plan.id || checkoutDisabled}
                   className="flex w-full items-center justify-center rounded-xl bg-amber-400 py-3 text-sm font-medium text-zinc-950 transition-colors hover:bg-amber-300 disabled:opacity-60"
                 >
                   {isCurrent
                     ? "Current plan"
                     : loading === plan.id
                       ? "Redirecting..."
-                      : `Upgrade to ${plan.name}`}
+                      : paymentsReady === false
+                        ? "Coming soon"
+                        : !user
+                          ? "Sign in to upgrade"
+                          : `Upgrade to ${plan.name}`}
                 </button>
               )}
             </div>

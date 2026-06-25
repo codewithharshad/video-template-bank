@@ -21,7 +21,7 @@ interface DodoClient {
     customerPortal: {
       create(
         customerId: string,
-        body?: { send_email?: boolean }
+        body?: { send_email?: boolean; return_url?: string }
       ): Promise<{ link: string }>;
     };
   };
@@ -83,14 +83,20 @@ export const dodoProvider: PaymentProvider = {
     return { url: session.checkout_url };
   },
 
-  async createPortalUrl({ user }: PortalParams) {
+  async createPortalUrl({ user, origin }: PortalParams) {
     if (!user.providerCustomerId) {
       return null;
     }
     const client = getClient();
+    const returnUrl =
+      process.env.DODO_PAYMENTS_RETURN_URL?.replace(
+        /\?checkout=success$/,
+        ""
+      ) ?? `${origin}/account`;
+
     const session = await client.customers.customerPortal.create(
       user.providerCustomerId,
-      { send_email: false }
+      { send_email: false, return_url: returnUrl }
     );
     return { url: session.link };
   },

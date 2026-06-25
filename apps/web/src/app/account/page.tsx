@@ -2,15 +2,25 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import { Coins, Crown, CreditCard } from "lucide-react";
+import { CheckCircle2, Coins, Crown, CreditCard } from "lucide-react";
 import { useCatalog } from "@/components/catalog-provider";
 
 export default function AccountPage() {
   const { user, refreshUser } = useCatalog();
   const [portalLoading, setPortalLoading] = useState(false);
+  const [checkoutSuccess, setCheckoutSuccess] = useState(false);
 
   useEffect(() => {
     void refreshUser();
+  }, [refreshUser]);
+
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    if (params.get("checkout") !== "success") return;
+
+    setCheckoutSuccess(true);
+    void refreshUser();
+    window.history.replaceState({}, "", "/account");
   }, [refreshUser]);
 
   const openBillingPortal = async () => {
@@ -43,6 +53,18 @@ export default function AccountPage() {
     <div className="mx-auto max-w-2xl px-4 py-12 sm:px-6">
       <h1 className="text-3xl font-bold tracking-tight">Account</h1>
       <p className="mt-2 text-zinc-400">{user.email}</p>
+
+      {checkoutSuccess && (
+        <div className="mt-6 flex items-start gap-3 rounded-xl border border-emerald-500/30 bg-emerald-500/10 px-4 py-3 text-sm text-emerald-200">
+          <CheckCircle2 className="mt-0.5 h-5 w-5 shrink-0 text-emerald-400" />
+          <div>
+            <p className="font-medium text-emerald-100">Payment received</p>
+            <p className="mt-1 text-emerald-200/80">
+              Your plan should update within a minute. Refresh if it still shows Free.
+            </p>
+          </div>
+        </div>
+      )}
 
       <div className="mt-8 space-y-4">
         <div className="glass rounded-2xl p-6">

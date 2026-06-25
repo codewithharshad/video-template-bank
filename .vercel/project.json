@@ -1,1 +1,16 @@
-{"projectId":"prj_XVt4vL0VDBh2lBngc5nfTwc9M4Fr","orgId":"team_9V4xCFlhDCfISLHtrFOqTLgh","projectName":"animably"}
+{
+  "projectId": "prj_XVt4vL0VDBh2lBngc5nfTwc9M4Fr",
+  "orgId": "team_9V4xCFlhDCfISLHtrFOqTLgh",
+  "projectName": "animably",
+  "settings": {
+    "createdAt": 1781902434185,
+    "framework": "nextjs",
+    "devCommand": null,
+    "installCommand": null,
+    "buildCommand": null,
+    "outputDirectory": null,
+    "rootDirectory": "apps/web",
+    "directoryListing": false,
+    "nodeVersion": "24.x"
+  }
+}

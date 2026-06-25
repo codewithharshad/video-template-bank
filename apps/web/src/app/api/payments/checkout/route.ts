@@ -16,6 +16,7 @@ export async function POST(request: Request) {
     if (plan !== "creator" && plan !== "pro") {
       return NextResponse.json({ error: "Invalid plan." }, { status: 400 });
     }
+    //payment provider - dodo
 
     const provider = getPaymentProvider();
     if (!provider.isConfigured()) {
