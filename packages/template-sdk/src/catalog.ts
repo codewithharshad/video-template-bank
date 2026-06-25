@@ -265,10 +265,10 @@ export const HOOK_CATALOG: HookTemplate[] = [
     popularity: 90,
     previewGradient: "from-cyan-700 via-slate-800 to-violet-800",
     props: [
-      { key: "title", label: "Title", type: "text", defaultValue: "Manual editing vs HookForge", maxLength: 50 },
+      { key: "title", label: "Title", type: "text", defaultValue: "Manual editing vs Animably", maxLength: 50 },
       { key: "labelA", label: "Option A", type: "text", defaultValue: "After Effects", maxLength: 25 },
       { key: "valueA", label: "Value A", type: "number", defaultValue: 4 },
-      { key: "labelB", label: "Option B", type: "text", defaultValue: "HookForge", maxLength: 25 },
+      { key: "labelB", label: "Option B", type: "text", defaultValue: "Animably", maxLength: 25 },
       { key: "valueB", label: "Value B", type: "number", defaultValue: 0.1 },
       { key: "unit", label: "Unit", type: "text", defaultValue: "hrs", maxLength: 10 },
       { key: "accentColor", label: "Bar A color", type: "color", defaultValue: "#ef4444", bindToBrand: "accent" },

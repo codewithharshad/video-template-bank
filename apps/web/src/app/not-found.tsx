@@ -7,7 +7,7 @@ export default function NotFound() {
       <p className="mt-2 text-zinc-400">Template not found.</p>
       <Link
         href="/hooks"
-        className="mt-6 text-violet-400 hover:text-violet-300"
+        className="mt-6 text-amber-400 hover:text-amber-300"
       >
         Browse templates
       </Link>

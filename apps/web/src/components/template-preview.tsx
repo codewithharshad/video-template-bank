@@ -10,8 +10,8 @@ import { isTransparentProps } from "@/lib/transparent-export";
 function PreviewSkeleton() {
   return (
     <div className="flex aspect-[9/16] w-full flex-col items-center justify-center gap-3 rounded-xl border border-zinc-800 bg-zinc-900/80">
-      <div className="flex h-14 w-14 items-center justify-center rounded-full bg-violet-600/20">
-        <Play className="h-6 w-6 text-violet-400" />
+      <div className="flex h-14 w-14 items-center justify-center rounded-full bg-amber-600/20">
+        <Play className="h-6 w-6 text-amber-400" />
       </div>
       <p className="text-sm text-zinc-500">Loading preview...</p>
     </div>

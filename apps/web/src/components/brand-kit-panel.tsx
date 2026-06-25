@@ -10,7 +10,7 @@ export function BrandKitPanel() {
     <div className="glass rounded-2xl p-5">
       <div className="mb-4 flex items-center justify-between">
         <div className="flex items-center gap-2">
-          <Palette className="h-4 w-4 text-violet-400" />
+          <Palette className="h-4 w-4 text-amber-400" />
           <h3 className="font-semibold">Brand Kit</h3>
         </div>
         <button
@@ -30,7 +30,7 @@ export function BrandKitPanel() {
             type="text"
             value={brand.name}
             onChange={(e) => updateBrand({ name: e.target.value })}
-            className="w-full rounded-lg border border-zinc-800 bg-zinc-900 px-3 py-2 text-sm focus:border-violet-500/50 focus:outline-none"
+            className="w-full rounded-lg border border-zinc-800 bg-zinc-900 px-3 py-2 text-sm focus:border-amber-500/50 focus:outline-none"
           />
         </div>
 

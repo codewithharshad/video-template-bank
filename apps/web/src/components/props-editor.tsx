@@ -30,7 +30,7 @@ export function PropsEditor({
         <button
           type="button"
           onClick={applyBrand}
-          className="text-xs text-violet-400 hover:text-violet-300"
+          className="text-xs text-amber-400 hover:text-amber-300"
         >
           Apply brand colors
         </button>
@@ -53,7 +53,7 @@ export function PropsEditor({
             <label className="mb-1.5 block text-xs text-zinc-500">
               {field.label}
               {field.bindToBrand && (
-                <span className="ml-1 text-violet-400/70">· brand</span>
+                <span className="ml-1 text-amber-400/70">· brand</span>
               )}
             </label>
 
@@ -65,7 +65,7 @@ export function PropsEditor({
                 onChange={(e) =>
                   onChange({ ...props, [field.key]: e.target.value })
                 }
-                className="w-full rounded-lg border border-zinc-800 bg-zinc-900 px-3 py-2 text-sm focus:border-violet-500/50 focus:outline-none"
+                className="w-full rounded-lg border border-zinc-800 bg-zinc-900 px-3 py-2 text-sm focus:border-amber-500/50 focus:outline-none"
               />
             )}
 
@@ -76,7 +76,7 @@ export function PropsEditor({
                 onChange={(e) =>
                   onChange({ ...props, [field.key]: Number(e.target.value) })
                 }
-                className="w-full rounded-lg border border-zinc-800 bg-zinc-900 px-3 py-2 text-sm focus:border-violet-500/50 focus:outline-none"
+                className="w-full rounded-lg border border-zinc-800 bg-zinc-900 px-3 py-2 text-sm focus:border-amber-500/50 focus:outline-none"
               />
             )}
 

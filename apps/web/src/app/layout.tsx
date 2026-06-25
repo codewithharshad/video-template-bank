@@ -3,13 +3,14 @@ import { Inter } from "next/font/google";
 import { AuthProvider } from "@/components/auth-provider";
 import "./globals.css";
 import { Header } from "@/components/header";
+import { Footer } from "@/components/footer";
 import { BrandProvider } from "@/components/brand-provider";
 import { CatalogProvider } from "@/components/catalog-provider";
 
 const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
 
 export const metadata: Metadata = {
-  title: "HookForge — Viral Motion Graphics for Creators",
+  title: "Animably — Viral Motion Graphics for Creators",
   description:
     "Browse, customize, and export pro motion graphics hooks in seconds. No After Effects required.",
 };
@@ -29,6 +30,7 @@ export default function RootLayout({
             <CatalogProvider>
               <Header />
               <main>{children}</main>
+              <Footer />
             </CatalogProvider>
           </BrandProvider>
         </AuthProvider>

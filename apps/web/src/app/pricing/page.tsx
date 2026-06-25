@@ -3,7 +3,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import { Check, Crown, Sparkles } from "lucide-react";
-import { PLANS } from "@/lib/stripe/plans";
+import { PLANS } from "@/lib/payments/plans";
 import { useCatalog } from "@/components/catalog-provider";
 
 export default function PricingPage() {
@@ -13,7 +13,7 @@ export default function PricingPage() {
   const handleCheckout = async (plan: "creator" | "pro") => {
     setLoading(plan);
     try {
-      const res = await fetch("/api/stripe/checkout", {
+      const res = await fetch("/api/payments/checkout", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ plan }),
@@ -22,7 +22,7 @@ export default function PricingPage() {
       if (data.url) {
         window.location.href = data.url;
       } else {
-        alert(data.error ?? "Checkout unavailable. Configure Stripe env vars.");
+        alert(data.error ?? "Checkout unavailable. Please try again later.");
       }
     } finally {
       setLoading(null);
@@ -47,11 +47,11 @@ export default function PricingPage() {
             <div
               key={plan.id}
               className={`glass relative rounded-2xl p-6 ${
-                isPro ? "border-violet-500/40 ring-1 ring-violet-500/20" : ""
+                isPro ? "border-amber-500/40 ring-1 ring-amber-500/20" : ""
               }`}
             >
               {isPro && (
-                <div className="absolute -top-3 left-1/2 -translate-x-1/2 rounded-full bg-violet-600 px-3 py-1 text-xs font-semibold">
+                <div className="absolute -top-3 left-1/2 -translate-x-1/2 rounded-full bg-amber-400 px-3 py-1 text-xs font-semibold text-zinc-950">
                   Most popular
                 </div>
               )}
@@ -60,7 +60,7 @@ export default function PricingPage() {
                 {isPro ? (
                   <Crown className="h-5 w-5 text-amber-400" />
                 ) : (
-                  <Sparkles className="h-5 w-5 text-violet-400" />
+                  <Sparkles className="h-5 w-5 text-amber-400" />
                 )}
                 <h2 className="text-xl font-semibold">{plan.name}</h2>
               </div>
@@ -97,7 +97,7 @@ export default function PricingPage() {
                   type="button"
                   onClick={() => handleCheckout(plan.id)}
                   disabled={loading === plan.id || isCurrent}
-                  className="flex w-full items-center justify-center rounded-xl bg-violet-600 py-3 text-sm font-medium text-white transition-colors hover:bg-violet-500 disabled:opacity-60"
+                  className="flex w-full items-center justify-center rounded-xl bg-amber-400 py-3 text-sm font-medium text-zinc-950 transition-colors hover:bg-amber-300 disabled:opacity-60"
                 >
                   {isCurrent
                     ? "Current plan"

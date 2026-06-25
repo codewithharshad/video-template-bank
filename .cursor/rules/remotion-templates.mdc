@@ -1,0 +1,33 @@
+---
+description: How to author Remotion compositions and register templates
+globs: apps/web/src/remotion/**,packages/template-sdk/src/**
+alwaysApply: false
+---
+
+# Remotion Compositions & Templates
+
+A "template" = catalog metadata (`template-sdk`) + a React composition rendered by Remotion.
+Adding a new template requires wiring **three** places:
+
+1. **Composition** — `apps/web/src/remotion/compositions/<Name>.tsx`. A React component
+   whose props match the template's `props[].key`. Drive all animation from
+   `useCurrentFrame()` / `useVideoConfig()`; never use real time, `Date.now()`, or
+   `setTimeout` for animation. Reuse helpers in `remotion/lib` (`motion.ts` springs,
+   `resolveBg`, `useCompactPadding`).
+2. **Registry** — add the component to `COMPOSITION_REGISTRY` in `remotion/index.ts`,
+   keyed by its `compositionId`.
+3. **Catalog entry** — add a `HookTemplate` to `HOOK_CATALOG` / `OVERLAY_CATALOG` in
+   `template-sdk`, with matching `compositionId`, `props`, dimensions, and tags.
+
+`RemotionRoot` auto-generates a `<Composition>` per catalog template, using `slug` as the
+composition `id` and deriving `defaultProps` from each prop's `defaultValue`. So
+`slug` ↔ composition id, and `compositionId` ↔ registry key.
+
+## Rules
+
+- Keep compositions pure and deterministic — same frame in, same pixels out.
+- Props are `string | number` only (see `PropFieldType`); coerce via `coerceTemplateProps`.
+- Support transparent export: respect background props through `resolveBg(bg, "transparent")`
+  rather than hardcoding an opaque background.
+- Compositions must render identically in the browser player and the server renderer,
+  so avoid browser-only APIs (`window`, `document`) in render paths.

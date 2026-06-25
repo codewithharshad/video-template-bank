@@ -30,7 +30,7 @@ export function HeaderClerkActions({ user }: { user: UserProfile | null }) {
               </>
             ) : (
               <>
-                <Coins className="h-3.5 w-3.5 text-violet-400" />
+                <Coins className="h-3.5 w-3.5 text-amber-400" />
                 <span className="text-zinc-300">{user.credits} credits</span>
               </>
             )}
@@ -65,7 +65,7 @@ export function HeaderClerkActions({ user }: { user: UserProfile | null }) {
         <SignUpButton mode="modal">
           <button
             type="button"
-            className="rounded-full bg-violet-600 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-violet-500"
+            className="rounded-full bg-amber-400 px-4 py-2 text-sm font-medium text-zinc-950 transition-colors hover:bg-amber-300"
           >
             Try free
           </button>

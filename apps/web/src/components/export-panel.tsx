@@ -139,13 +139,13 @@ export function ExportPanel({
   return (
     <div className="glass rounded-2xl p-5">
       <div className="mb-4 flex items-center gap-2">
-        <Download className="h-4 w-4 text-violet-400" />
+        <Download className="h-4 w-4 text-amber-400" />
         <h3 className="font-semibold">Export</h3>
       </div>
 
       <div className="space-y-4">
         {authEnabled && !user && (
-          <div className="flex gap-2 rounded-lg border border-violet-500/30 bg-violet-500/10 p-3 text-xs text-violet-200">
+          <div className="flex gap-2 rounded-lg border border-amber-500/30 bg-amber-500/10 p-3 text-xs text-amber-200">
             <AlertCircle className="mt-0.5 h-4 w-4 shrink-0" />
             <span>
               <Link href="/sign-in" className="underline hover:text-white">
@@ -186,14 +186,14 @@ export function ExportPanel({
             className={`flex w-full items-start gap-3 rounded-xl border p-4 text-left transition-colors disabled:opacity-50 ${
               transparent
                 ? "border-emerald-500/50 bg-emerald-500/10"
-                : "border-violet-500/50 bg-violet-500/10"
+                : "border-amber-500/50 bg-amber-500/10"
             } ${solidProLocked && !transparent ? "opacity-60" : ""}`}
           >
             <div
               className={`mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-md border ${
                 transparent
                   ? "border-emerald-500 bg-emerald-500 text-black"
-                  : "border-violet-500 bg-violet-500 text-white"
+                  : "border-amber-400 bg-amber-400 text-zinc-950"
               }`}
             >
               {transparent ? (
@@ -305,7 +305,7 @@ export function ExportPanel({
             </div>
             <div className="h-2 overflow-hidden rounded-full bg-zinc-800">
               <div
-                className="h-full rounded-full bg-violet-500 transition-all duration-300"
+                className="h-full rounded-full bg-amber-500 transition-all duration-300"
                 style={{ width: `${Math.round(progress * 100)}%` }}
               />
             </div>
@@ -340,7 +340,7 @@ export function ExportPanel({
             (authEnabled && !user) ||
             (authEnabled && user?.plan === "free" && template.isPro)
           }
-          className="flex w-full items-center justify-center gap-2 rounded-xl bg-violet-600 py-3 font-medium text-white transition-colors hover:bg-violet-500 disabled:cursor-not-allowed disabled:opacity-60"
+          className="flex w-full items-center justify-center gap-2 rounded-xl bg-amber-400 py-3 font-medium text-zinc-950 transition-colors hover:bg-amber-300 disabled:cursor-not-allowed disabled:opacity-60"
         >
           <Download className="h-4 w-4" />
           {exporting

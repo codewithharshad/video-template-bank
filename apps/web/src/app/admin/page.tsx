@@ -42,7 +42,7 @@ export default function AdminPage() {
     <div className="mx-auto max-w-6xl px-4 py-12 sm:px-6">
       <div className="mb-8 flex flex-wrap items-center justify-between gap-4">
         <div>
-          <div className="mb-2 flex items-center gap-2 text-violet-400">
+          <div className="mb-2 flex items-center gap-2 text-amber-400">
             <LayoutDashboard className="h-5 w-5" />
             <span className="text-sm font-medium">Admin</span>
           </div>
@@ -53,7 +53,7 @@ export default function AdminPage() {
         </div>
         <Link
           href="/admin/templates/new"
-          className="inline-flex items-center gap-2 rounded-xl bg-violet-600 px-4 py-2.5 text-sm font-medium text-white hover:bg-violet-500"
+          className="inline-flex items-center gap-2 rounded-xl bg-amber-400 px-4 py-2.5 text-sm font-medium text-zinc-950 hover:bg-amber-300"
         >
           <Plus className="h-4 w-4" />
           New template
@@ -83,7 +83,7 @@ export default function AdminPage() {
           <p className="text-zinc-400">No CMS templates yet.</p>
           <Link
             href="/admin/templates/new"
-            className="mt-4 text-sm text-violet-400 hover:text-violet-300"
+            className="mt-4 text-sm text-amber-400 hover:text-amber-300"
           >
             Create your first template
           </Link>
@@ -120,7 +120,7 @@ export default function AdminPage() {
                   <td className="px-4 py-3 text-right">
                     <Link
                       href={`/admin/templates/${template.id}`}
-                      className="text-violet-400 hover:text-violet-300"
+                      className="text-amber-400 hover:text-amber-300"
                     >
                       Edit
                     </Link>

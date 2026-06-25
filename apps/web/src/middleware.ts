@@ -7,6 +7,8 @@ const isProtectedRoute = createRouteMatcher([
   "/downloads(.*)",
   "/admin(.*)",
   "/api/exports(.*)",
+  "/api/payments/checkout(.*)",
+  "/api/payments/portal(.*)",
   "/api/stripe/checkout(.*)",
   "/api/stripe/portal(.*)",
   "/api/admin(.*)",

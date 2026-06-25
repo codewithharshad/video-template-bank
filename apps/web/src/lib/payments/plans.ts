@@ -1,5 +1,6 @@
-import Stripe from "stripe";
 import type { UserPlan } from "@video-lib/database";
+
+export type PaidPlan = Exclude<UserPlan, "free">;
 
 export const PLANS = {
   free: {
@@ -44,31 +45,7 @@ export const PLANS = {
   },
 } as const;
 
-export function getStripe() {
-  const key = process.env.STRIPE_SECRET_KEY;
-  if (!key) {
-    throw new Error("STRIPE_SECRET_KEY is not configured.");
-  }
-  return new Stripe(key, { apiVersion: "2025-08-27.basil" });
-}
-
-export function isStripeConfigured() {
-  return Boolean(
-    process.env.STRIPE_SECRET_KEY &&
-      process.env.STRIPE_WEBHOOK_SECRET &&
-      (process.env.STRIPE_CREATOR_PRICE_ID || process.env.STRIPE_PRO_PRICE_ID)
-  );
-}
-
-export function planFromPriceId(priceId: string): UserPlan | null {
-  if (priceId === process.env.STRIPE_CREATOR_PRICE_ID) return "creator";
-  if (priceId === process.env.STRIPE_PRO_PRICE_ID) return "pro";
-  return null;
-}
-
-export function priceIdForPlan(plan: Exclude<UserPlan, "free">) {
-  if (plan === "creator") {
-    return process.env.STRIPE_CREATOR_PRICE_ID;
-  }
-  return process.env.STRIPE_PRO_PRICE_ID;
+/** Monthly credit grant per plan (used on subscribe + renewal). -1 = unlimited. */
+export function monthlyCreditsForPlan(plan: PaidPlan): number {
+  return PLANS[plan].credits;
 }

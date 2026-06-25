@@ -10,6 +10,7 @@ import {
 
 export type UserPlan = "free" | "creator" | "pro";
 export type UserRole = "user" | "admin";
+export type PaymentProviderId = "dodo" | "razorpay" | "stripe";
 
 export const users = pgTable("users", {
   id: text("id").primaryKey(),
@@ -18,6 +19,11 @@ export const users = pgTable("users", {
   credits: integer("credits").notNull().default(20),
   plan: text("plan").notNull().default("free").$type<UserPlan>(),
   role: text("role").notNull().default("user").$type<UserRole>(),
+  // Provider-agnostic billing (Dodo Payments, Razorpay, etc.)
+  paymentProvider: text("payment_provider").$type<PaymentProviderId>(),
+  providerCustomerId: text("provider_customer_id"),
+  providerSubscriptionId: text("provider_subscription_id"),
+  // Legacy Stripe columns (kept for backward compatibility)
   stripeCustomerId: text("stripe_customer_id"),
   stripeSubscriptionId: text("stripe_subscription_id"),
   createdAt: timestamp("created_at", { withTimezone: true })

@@ -7,7 +7,7 @@ import {
 } from "@video-lib/template-sdk";
 import { useCatalog } from "@/components/catalog-provider";
 import { TemplateCard } from "@/components/template-card";
-import { FilterSidebar, SearchBar } from "@/components/filter-sidebar";
+import { ActiveFilters, FilterSidebar, SearchBar } from "@/components/filter-sidebar";
 import { BrandKitPanel } from "@/components/brand-kit-panel";
 import { sortTemplatesByRenderCost } from "@/lib/render-cost";
 
@@ -34,18 +34,18 @@ export default function HooksPage() {
   }, [filters, templates]);
 
   return (
-    <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6">
-      <div className="mb-8">
-        <h1 className="text-3xl font-bold tracking-tight">
+    <div className="mx-auto max-w-7xl px-4 py-12 sm:px-6">
+      <div className="mx-auto mb-10 max-w-2xl text-center">
+        <h1 className="text-3xl font-bold tracking-tight sm:text-4xl">
           Animation Templates
         </h1>
-        <p className="mt-2 text-zinc-400">
-          Kinetic hooks for cold opens and pattern interrupts. Customize and export
-          with transparent, content-sized MOV files.
+        <p className="mt-3 text-zinc-400">
+          When two videos are otherwise similar, the one with better editing wins.
+          Customize a hook and export with transparent, content-sized files.
         </p>
       </div>
 
-      <div className="mb-6">
+      <div className="mb-6 space-y-4">
         <SearchBar
           value={filters.search}
           onChange={(search) => setFilters({ ...filters, search })}
@@ -53,6 +53,7 @@ export default function HooksPage() {
           onSortChange={(sort) => setFilters({ ...filters, sort })}
           onOpenFilters={() => setMobileFiltersOpen(true)}
         />
+        <ActiveFilters filters={filters} onChange={setFilters} />
       </div>
 
       <div className="flex gap-8">
@@ -84,13 +85,13 @@ export default function HooksPage() {
                     sort: "popular",
                   })
                 }
-                className="mt-4 text-sm text-violet-400 hover:text-violet-300"
+                className="mt-4 text-sm text-amber-400 hover:text-amber-300"
               >
                 Clear all filters
               </button>
             </div>
           ) : (
-            <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 sm:gap-4 lg:grid-cols-4 xl:grid-cols-5">
+            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
               {filtered.map((template) => (
                 <TemplateCard key={template.id} template={template} />
               ))}

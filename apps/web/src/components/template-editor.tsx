@@ -126,7 +126,7 @@ function TemplateEditorHeader({ template }: { template: HookTemplate }) {
         {template.creatorStyles.map((style) => (
           <span
             key={style}
-            className="rounded-md bg-violet-500/10 px-2.5 py-1 text-xs text-violet-300"
+            className="rounded-md bg-amber-500/10 px-2.5 py-1 text-xs text-amber-300"
           >
             {CREATOR_LABELS[style]}
           </span>

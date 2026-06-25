@@ -30,7 +30,7 @@ export function AdminTemplateForm({ initial }: { initial?: CatalogTemplate }) {
     isPro: meta.isPro ?? false,
     isFree: meta.isFree ?? true,
     popularity: meta.popularity ?? 50,
-    previewGradient: meta.previewGradient ?? "from-violet-600 to-fuchsia-600",
+    previewGradient: meta.previewGradient ?? "from-amber-500 to-yellow-600",
     width: meta.width ?? 1080,
     height: meta.height ?? 1920,
     durationInFrames: meta.durationInFrames ?? 90,
@@ -268,7 +268,7 @@ export function AdminTemplateForm({ initial }: { initial?: CatalogTemplate }) {
         <button
           type="submit"
           disabled={saving}
-          className="rounded-xl bg-violet-600 px-5 py-2.5 text-sm font-medium text-white hover:bg-violet-500 disabled:opacity-60"
+          className="rounded-xl bg-amber-400 px-5 py-2.5 text-sm font-medium text-zinc-950 hover:bg-amber-300 disabled:opacity-60"
         >
           {saving ? "Saving..." : initial ? "Update template" : "Create template"}
         </button>

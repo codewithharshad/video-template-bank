@@ -1,0 +1,39 @@
+---
+description: Animably project stack, structure, and core conventions
+alwaysApply: true
+---
+
+# Animably — Project Overview
+
+Viral motion-graphics platform. Users browse video templates, customize them with a
+brand kit, preview live with Remotion, and export MP4/WebM/MOV (incl. alpha).
+
+## Monorepo layout (npm workspaces, Node >=20)
+
+- `apps/web` — Next.js 15 (App Router) + React 19 app. The product.
+- `apps/render-worker` — Hono server that renders Remotion compositions server-side
+  (ProRes 4444 / H.264). Imports directly from `apps/web/src/lib` and `template-sdk`.
+- `packages/template-sdk` — shared template/overlay catalog + TS types. No build step;
+  consumed via `@video-lib/template-sdk` source.
+- `packages/database` — Drizzle ORM schema + Neon Postgres client (`@video-lib/database`).
+
+## Stack
+
+- Next.js 15 App Router, React 19, TypeScript (strict).
+- Tailwind CSS v4 (`@tailwindcss/postcss`), `clsx` + `tailwind-merge` via `cn()` in `lib/utils`.
+- Remotion 4 for compositions, live preview (`@remotion/player`), and rendering.
+- Clerk auth (`@clerk/nextjs`), Stripe billing, Drizzle + Neon, Vercel Blob for storage.
+
+## Conventions
+
+- Use the `@/*` path alias for imports inside `apps/web` (maps to `apps/web/src`).
+- Every external integration is **gated by env presence** so the app runs locally with
+  nothing configured. Mirror this: check `isAuthEnabled()`, `isClerkConfigured()`,
+  `isDatabaseConfigured()`, `isServerExportEnabled()` before using a service, and degrade
+  gracefully (return `null`/`[]`/fallback) instead of throwing.
+- Prefer editing the shared `template-sdk` catalog/types over duplicating template data.
+
+## Commands
+
+- `npm run dev` (web, port 3000), `npm run dev:worker` (render worker).
+- `npm run build`, `npm run lint`, `npm run db:push`.

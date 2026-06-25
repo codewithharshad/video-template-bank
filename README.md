@@ -1,4 +1,4 @@
-# HookForge
+# Animably
 
 Viral motion graphics platform for creators. Browse templates, customize with your brand kit, preview live with Remotion, and export MP4/WebM with alpha.
 

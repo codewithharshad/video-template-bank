@@ -16,7 +16,7 @@ export default function AccountPage() {
   const openBillingPortal = async () => {
     setPortalLoading(true);
     try {
-      const res = await fetch("/api/stripe/portal", { method: "POST" });
+      const res = await fetch("/api/payments/portal", { method: "POST" });
       const data = (await res.json()) as { url?: string; error?: string };
       if (data.url) {
         window.location.href = data.url;
@@ -32,7 +32,7 @@ export default function AccountPage() {
     return (
       <div className="mx-auto max-w-2xl px-4 py-16 text-center">
         <p className="text-zinc-400">Sign in to view your account.</p>
-        <Link href="/sign-in" className="mt-4 inline-block text-violet-400 hover:text-violet-300">
+        <Link href="/sign-in" className="mt-4 inline-block text-amber-400 hover:text-amber-300">
           Sign in
         </Link>
       </div>
@@ -50,7 +50,7 @@ export default function AccountPage() {
             {user.plan === "pro" ? (
               <Crown className="h-6 w-6 text-amber-400" />
             ) : (
-              <Coins className="h-6 w-6 text-violet-400" />
+              <Coins className="h-6 w-6 text-amber-400" />
             )}
             <div>
               <p className="text-sm text-zinc-500">Current plan</p>
@@ -73,7 +73,7 @@ export default function AccountPage() {
         <div className="flex flex-wrap gap-3">
           <Link
             href="/pricing"
-            className="rounded-xl bg-violet-600 px-4 py-2.5 text-sm font-medium text-white hover:bg-violet-500"
+            className="rounded-xl bg-amber-400 px-4 py-2.5 text-sm font-medium text-zinc-950 hover:bg-amber-300"
           >
             View plans
           </Link>

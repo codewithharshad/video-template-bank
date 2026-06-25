@@ -2,6 +2,7 @@
 
 import { ClerkProvider } from "@clerk/nextjs";
 import { isAuthEnabled } from "@/lib/auth/clerk-config";
+import { clerkAppearance } from "@/lib/auth/clerk-appearance";
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
   if (!isAuthEnabled()) {
@@ -14,5 +15,16 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     return <>{children}</>;
   }
 
-  return <ClerkProvider publishableKey={publishableKey}>{children}</ClerkProvider>;
+  return (
+    <ClerkProvider
+      publishableKey={publishableKey}
+      appearance={clerkAppearance}
+      signInUrl={process.env.NEXT_PUBLIC_CLERK_SIGN_IN_URL ?? "/sign-in"}
+      signUpUrl={process.env.NEXT_PUBLIC_CLERK_SIGN_UP_URL ?? "/sign-up"}
+      afterSignInUrl="/hooks"
+      afterSignUpUrl="/hooks"
+    >
+      {children}
+    </ClerkProvider>
+  );
 }
