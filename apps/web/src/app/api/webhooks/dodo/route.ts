@@ -1,4 +1,5 @@
 import { Webhooks } from "@dodopayments/nextjs";
+import type { NextRequest } from "next/server";
 import type { PaidPlan } from "@/lib/payments/plans";
 import {
   activateSubscription,
@@ -8,6 +9,7 @@ import {
 } from "@/lib/payments/sync";
 
 export const runtime = "nodejs";
+export const dynamic = "force-dynamic";
 
 interface DodoWebhookData {
   metadata?: Record<string, string>;
@@ -30,64 +32,84 @@ function parsePayload(payload: unknown) {
   return { userId, plan, providerCustomerId, providerSubscriptionId };
 }
 
-export const POST = Webhooks({
-  webhookKey: process.env.DODO_PAYMENTS_WEBHOOK_KEY ?? "",
+type WebhookHandler = (request: NextRequest) => Promise<Response>;
 
-  onSubscriptionActive: async (payload: unknown) => {
-    const { userId, plan, providerCustomerId, providerSubscriptionId } =
-      parsePayload(payload);
-    if (!userId || !plan) return;
-    await activateSubscription({
-      userId,
-      plan,
-      provider: "dodo",
-      providerCustomerId,
-      providerSubscriptionId,
-    });
-  },
+let cachedHandler: WebhookHandler | null = null;
 
-  onSubscriptionRenewed: async (payload: unknown) => {
-    const { userId, plan, providerCustomerId } = parsePayload(payload);
-    const user = await findBillingUser({
-      userId,
-      provider: "dodo",
-      providerCustomerId,
-    });
-    if (!user) return;
-    const effectivePlan =
-      plan ??
-      (user.plan === "creator" || user.plan === "pro" ? user.plan : null);
-    if (!effectivePlan) return;
-    await refreshSubscriptionCredits({ userId: user.id, plan: effectivePlan });
-  },
+function getWebhookHandler(): WebhookHandler {
+  const webhookKey = process.env.DODO_PAYMENTS_WEBHOOK_KEY;
+  if (!webhookKey) {
+    throw new Error("DODO_PAYMENTS_WEBHOOK_KEY is not configured.");
+  }
 
-  onSubscriptionCancelled: async (payload: unknown) => {
-    const { userId, providerCustomerId } = parsePayload(payload);
-    const user = await findBillingUser({
-      userId,
-      provider: "dodo",
-      providerCustomerId,
+  if (!cachedHandler) {
+    cachedHandler = Webhooks({
+      webhookKey,
+      onSubscriptionActive: async (payload: unknown) => {
+        const { userId, plan, providerCustomerId, providerSubscriptionId } =
+          parsePayload(payload);
+        if (!userId || !plan) return;
+        await activateSubscription({
+          userId,
+          plan,
+          provider: "dodo",
+          providerCustomerId,
+          providerSubscriptionId,
+        });
+      },
+      onSubscriptionRenewed: async (payload: unknown) => {
+        const { userId, plan, providerCustomerId } = parsePayload(payload);
+        const user = await findBillingUser({
+          userId,
+          provider: "dodo",
+          providerCustomerId,
+        });
+        if (!user) return;
+        const effectivePlan =
+          plan ??
+          (user.plan === "creator" || user.plan === "pro" ? user.plan : null);
+        if (!effectivePlan) return;
+        await refreshSubscriptionCredits({
+          userId: user.id,
+          plan: effectivePlan,
+        });
+      },
+      onSubscriptionCancelled: async (payload: unknown) => {
+        const { userId, providerCustomerId } = parsePayload(payload);
+        const user = await findBillingUser({
+          userId,
+          provider: "dodo",
+          providerCustomerId,
+        });
+        if (user) await deactivateSubscription({ userId: user.id });
+      },
+      onSubscriptionExpired: async (payload: unknown) => {
+        const { userId, providerCustomerId } = parsePayload(payload);
+        const user = await findBillingUser({
+          userId,
+          provider: "dodo",
+          providerCustomerId,
+        });
+        if (user) await deactivateSubscription({ userId: user.id });
+      },
+      onSubscriptionOnHold: async (payload: unknown) => {
+        const { userId, providerCustomerId } = parsePayload(payload);
+        const user = await findBillingUser({
+          userId,
+          provider: "dodo",
+          providerCustomerId,
+        });
+        if (user) await deactivateSubscription({ userId: user.id });
+      },
     });
-    if (user) await deactivateSubscription({ userId: user.id });
-  },
+  }
 
-  onSubscriptionExpired: async (payload: unknown) => {
-    const { userId, providerCustomerId } = parsePayload(payload);
-    const user = await findBillingUser({
-      userId,
-      provider: "dodo",
-      providerCustomerId,
-    });
-    if (user) await deactivateSubscription({ userId: user.id });
-  },
+  return cachedHandler;
+}
 
-  onSubscriptionOnHold: async (payload: unknown) => {
-    const { userId, providerCustomerId } = parsePayload(payload);
-    const user = await findBillingUser({
-      userId,
-      provider: "dodo",
-      providerCustomerId,
-    });
-    if (user) await deactivateSubscription({ userId: user.id });
-  },
-});
+export async function POST(request: NextRequest) {
+  if (!process.env.DODO_PAYMENTS_WEBHOOK_KEY) {
+    return new Response("Webhook not configured", { status: 503 });
+  }
+  return getWebhookHandler()(request);
+}
