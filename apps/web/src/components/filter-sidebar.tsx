@@ -5,6 +5,7 @@ import { Check, ChevronDown, Search, SlidersHorizontal, X } from "lucide-react";
 import {
   CATEGORY_LABELS,
   CREATOR_LABELS,
+  OVERLAY_PLATFORM_LABELS,
   PLATFORM_LABELS,
   STYLE_LABELS,
   type FilterState,
@@ -13,6 +14,7 @@ import {
   type CreatorStyle,
   type Orientation,
   type Platform,
+  type OverlayPlatform,
 } from "@video-lib/template-sdk";
 import { cn } from "@/lib/utils";
 
@@ -23,6 +25,7 @@ interface FilterSidebarProps {
   mobileOpen: boolean;
   onMobileClose: () => void;
   showPlatforms?: boolean;
+  availableCategories?: TemplateCategory[];
 }
 
 function FilterSection({
@@ -110,7 +113,12 @@ export function FilterSidebar({
   mobileOpen,
   onMobileClose,
   showPlatforms = false,
+  availableCategories,
 }: FilterSidebarProps) {
+  const categoryOptions =
+    availableCategories ??
+    (Object.keys(CATEGORY_LABELS) as TemplateCategory[]);
+
   const content = (
     <div>
       <div className="mb-2 flex items-center justify-between">
@@ -123,7 +131,7 @@ export function FilterSidebar({
 
       <div className="space-y-4">
         <FilterSection title="Categories">
-          {(Object.keys(CATEGORY_LABELS) as TemplateCategory[]).map((cat) => (
+          {categoryOptions.map((cat) => (
             <FilterCheck
               key={cat}
               label={CATEGORY_LABELS[cat]}
@@ -248,11 +256,23 @@ export function FilterSidebar({
 export function ActiveFilters({
   filters,
   onChange,
+  overlayPlatform,
+  onClearOverlayPlatform,
 }: {
   filters: FilterState;
   onChange: (filters: FilterState) => void;
+  overlayPlatform?: OverlayPlatform | null;
+  onClearOverlayPlatform?: () => void;
 }) {
   const chips: { key: string; label: string; remove: () => void }[] = [];
+
+  if (overlayPlatform) {
+    chips.push({
+      key: `overlay-${overlayPlatform}`,
+      label: OVERLAY_PLATFORM_LABELS?.[overlayPlatform] ?? overlayPlatform,
+      remove: () => onClearOverlayPlatform?.(),
+    });
+  }
 
   filters.categories.forEach((cat) =>
     chips.push({
@@ -323,7 +343,10 @@ export function ActiveFilters({
       ))}
       <button
         type="button"
-        onClick={() => onChange(clearedFilters(filters))}
+        onClick={() => {
+          onClearOverlayPlatform?.();
+          onChange(clearedFilters(filters));
+        }}
         className="text-xs font-medium text-zinc-400 underline-offset-2 hover:text-white hover:underline"
       >
         Clear all

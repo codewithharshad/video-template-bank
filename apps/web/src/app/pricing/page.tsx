@@ -114,7 +114,7 @@ export default function PricingPage() {
 
               {plan.id === "free" ? (
                 <Link
-                  href={user ? "/effects" : "/sign-up"}
+                  href={user ? "/templates" : "/sign-up"}
                   className="flex w-full items-center justify-center rounded-xl border border-zinc-700 py-3 text-sm font-medium transition-colors hover:bg-zinc-800"
                 >
                   {user ? "Current plan" : "Get started free"}

@@ -43,35 +43,35 @@ const categories = [
     title: "Text Animation",
     description:
       "Capture attention fast with dynamic text and clear messaging — customize effects just like the pros.",
-    href: "/hooks",
+    href: "/templates?category=text-animation",
   },
   {
     icon: Boxes,
     title: "Engagement Mockup",
     description:
       "Showcase your product in a realistic setting, making it easy for your audience to picture themselves using it.",
-    href: "/hooks",
+    href: "/templates?category=engagement-mockup",
   },
   {
     icon: Sparkles,
-    title: "3D Transformation",
+    title: "Subscribe & Social",
     description:
-      "Add depth and realism with 3D transformations that make your content stand out from the feed.",
-    href: "/effects",
+      "Add depth and realism with social overlays that make your content stand out from the feed.",
+    href: "/templates?category=subscribe-banner,comment-popup,chat-mockup",
   },
   {
     icon: Search,
     title: "Web Search",
     description:
       "Create a realistic web-search experience that helps your audience understand complex topics simply.",
-    href: "/hooks",
+    href: "/templates?category=search-bar",
   },
   {
     icon: BarChart3,
     title: "Video Flowchart",
     description:
       "Visualize ideas with animated flowcharts that make complex concepts easy to understand and follow.",
-    href: "/hooks",
+    href: "/templates?category=animated-flowchart",
   },
 ];
 
@@ -214,14 +214,14 @@ export default function HomePage() {
 
             <div className="mt-10 flex flex-col items-center justify-center gap-4 sm:flex-row">
               <Link
-                href="/hooks"
+                href="/templates"
                 className="inline-flex items-center gap-2 rounded-full bg-amber-400 px-8 py-3.5 font-medium text-zinc-950 transition-colors hover:bg-amber-300"
               >
                 Create free animations now
                 <ArrowRight className="h-4 w-4" />
               </Link>
               <Link
-                href="/effects"
+                href="/templates"
                 className="inline-flex items-center gap-2 rounded-full border border-zinc-700 px-8 py-3.5 font-medium text-zinc-300 transition-colors hover:border-zinc-600 hover:text-white"
               >
                 Browse all templates
@@ -326,7 +326,7 @@ export default function HomePage() {
               animation now and see your content level up today.
             </p>
             <Link
-              href="/hooks"
+              href="/templates"
               className="mt-8 inline-flex items-center gap-2 rounded-full bg-amber-400 px-8 py-3.5 font-medium text-zinc-950 transition-colors hover:bg-amber-300"
             >
               Create free animations now
@@ -402,7 +402,7 @@ export default function HomePage() {
                   {update.blurb}
                 </p>
                 <Link
-                  href="/hooks"
+                  href="/templates"
                   className="mt-4 inline-flex items-center gap-1 text-sm text-amber-400 transition-colors hover:text-amber-300"
                 >
                   Read more
@@ -456,7 +456,7 @@ export default function HomePage() {
             with motion design.
           </p>
           <Link
-            href="/hooks"
+            href="/templates"
             className="mt-8 inline-flex items-center gap-2 rounded-full bg-amber-400 px-8 py-3.5 font-medium text-zinc-950 transition-colors hover:bg-amber-300"
           >
             Create free animations now

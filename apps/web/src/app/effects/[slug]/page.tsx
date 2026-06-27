@@ -1,19 +1,10 @@
-"use client";
+import { redirect } from "next/navigation";
 
-import { use } from "react";
-import { TemplateEditor } from "@/components/template-editor";
-
-export default function EffectEditorPage({
+export default async function EffectEditorPage({
   params,
 }: {
   params: Promise<{ slug: string }>;
 }) {
-  const { slug } = use(params);
-  return (
-    <TemplateEditor
-      slug={slug}
-      backHref="/effects"
-      backLabel="Back to effects"
-    />
-  );
+  const { slug } = await params;
+  redirect(`/templates/${slug}`);
 }

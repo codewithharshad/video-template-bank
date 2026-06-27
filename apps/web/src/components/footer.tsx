@@ -5,28 +5,27 @@ const columns = [
   {
     title: "Use cases",
     links: [
-      { label: "Text Animation", href: "/hooks" },
-      { label: "Engagement Mockup", href: "/hooks" },
-      { label: "Video Flowchart", href: "/hooks" },
-      { label: "3D Transformation", href: "/effects" },
-      { label: "Web Search", href: "/hooks" },
+      { label: "Text Animation", href: "/templates?category=text-animation" },
+      { label: "Engagement Mockup", href: "/templates?category=engagement-mockup" },
+      { label: "Video Flowchart", href: "/templates?category=animated-flowchart" },
+      { label: "Subscribe & Social", href: "/templates?category=subscribe-banner,comment-popup,chat-mockup" },
+      { label: "Web Search", href: "/templates?category=search-bar" },
     ],
   },
   {
     title: "Styles",
     links: [
-      { label: "Hormozi", href: "/hooks" },
-      { label: "Johnny Harris", href: "/hooks" },
-      { label: "Vox", href: "/hooks" },
-      { label: "SaaS Launch", href: "/effects" },
+      { label: "Hormozi", href: "/templates?creator=hormozi" },
+      { label: "Johnny Harris", href: "/templates?creator=johnny-harris" },
+      { label: "Vox", href: "/templates?creator=vox" },
+      { label: "SaaS Launch", href: "/templates?creator=saas" },
     ],
   },
   {
     title: "Product",
     links: [
       { label: "Pricing", href: "/pricing" },
-      { label: "Hooks Library", href: "/hooks" },
-      { label: "Video Effects", href: "/effects" },
+      { label: "Template Library", href: "/templates" },
       { label: "Downloads", href: "/downloads" },
     ],
   },
@@ -65,7 +64,7 @@ export function Footer() {
             </Link>
             <p className="mt-4 max-w-xs text-sm text-zinc-500">
               Viral motion graphics for creators. Browse, customize, and export
-              pro hooks in seconds — no After Effects required.
+              pro animations in seconds — no After Effects required.
             </p>
             <div className="mt-6 flex items-center gap-3">
               {socials.map((social) => (

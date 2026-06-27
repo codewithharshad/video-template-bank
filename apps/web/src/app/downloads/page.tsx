@@ -37,7 +37,7 @@ export default function DownloadsPage() {
           <Film className="mb-4 h-10 w-10 text-zinc-600" />
           <p className="text-zinc-400">No saved exports yet.</p>
           <Link
-            href="/effects"
+            href="/templates"
             className="mt-4 text-sm text-amber-400 hover:text-amber-300"
           >
             Browse templates
