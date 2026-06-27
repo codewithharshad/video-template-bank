@@ -46,6 +46,7 @@ const templateLinks: NavLink[] = [
 const resourceLinks: NavLink[] = [
   { label: "What's New", href: "/templates?sort=newest" },
   { label: "Pricing", href: "/pricing" },
+  { label: "Account", href: "/account" },
   { label: "Downloads", href: "/downloads" },
 ];
 

@@ -8,7 +8,7 @@ import {
   UserButton,
 } from "@clerk/nextjs";
 import Link from "next/link";
-import { Coins, Crown } from "lucide-react";
+import { Coins, Crown, User } from "lucide-react";
 
 interface UserProfile {
   id: string;
@@ -22,7 +22,10 @@ export function HeaderClerkActions({ user }: { user: UserProfile | null }) {
     <div className="flex items-center gap-3">
       <SignedIn>
         {user && (
-          <div className="hidden items-center gap-2 rounded-full border border-zinc-800 bg-zinc-900/80 px-3 py-1.5 text-xs sm:flex">
+          <Link
+            href="/account"
+            className="hidden items-center gap-2 rounded-full border border-zinc-800 bg-zinc-900/80 px-3 py-1.5 text-xs transition-colors hover:border-zinc-700 sm:inline-flex"
+          >
             {user.plan === "pro" ? (
               <>
                 <Crown className="h-3.5 w-3.5 text-amber-400" />
@@ -34,8 +37,14 @@ export function HeaderClerkActions({ user }: { user: UserProfile | null }) {
                 <span className="text-zinc-300">{user.credits} credits</span>
               </>
             )}
-          </div>
+          </Link>
         )}
+        <Link
+          href="/account"
+          className="hidden text-sm text-zinc-400 transition-colors hover:text-white sm:block"
+        >
+          Account
+        </Link>
         <Link
           href="/downloads"
           className="hidden text-sm text-zinc-400 transition-colors hover:text-white sm:block"
@@ -50,7 +59,15 @@ export function HeaderClerkActions({ user }: { user: UserProfile | null }) {
             Admin
           </Link>
         )}
-        <UserButton afterSignOutUrl="/" />
+        <UserButton afterSignOutUrl="/">
+          <UserButton.MenuItems>
+            <UserButton.Link
+              label="Account settings"
+              labelIcon={<User className="h-4 w-4" />}
+              href="/account"
+            />
+          </UserButton.MenuItems>
+        </UserButton>
       </SignedIn>
 
       <SignedOut>

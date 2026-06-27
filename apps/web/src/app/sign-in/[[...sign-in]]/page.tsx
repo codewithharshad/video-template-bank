@@ -1,7 +1,8 @@
 import { redirect } from "next/navigation";
 import { SignIn } from "@clerk/nextjs";
+import { AuthPageShell } from "@/components/auth/auth-page-shell";
 import { isAuthEnabled } from "@/lib/auth/clerk-config";
-import { clerkAppearance } from "@/lib/auth/clerk-appearance";
+import { clerkAuthFormAppearance } from "@/lib/auth/clerk-auth-appearance";
 
 export default function SignInPage() {
   if (!isAuthEnabled()) {
@@ -9,8 +10,13 @@ export default function SignInPage() {
   }
 
   return (
-    <div className="flex min-h-[calc(100vh-4rem)] items-center justify-center px-4 py-12">
-      <SignIn appearance={clerkAppearance} />
-    </div>
+    <AuthPageShell mode="sign-in">
+      <SignIn
+        appearance={clerkAuthFormAppearance}
+        routing="path"
+        path="/sign-in"
+        signUpUrl="/sign-up"
+      />
+    </AuthPageShell>
   );
 }

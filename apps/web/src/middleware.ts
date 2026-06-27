@@ -4,6 +4,7 @@ import { isClerkConfigured } from "@/lib/auth/clerk-config";
 
 const isProtectedRoute = createRouteMatcher([
   "/account(.*)",
+  "/dashboard(.*)",
   "/downloads(.*)",
   "/admin(.*)",
   "/api/exports(.*)",
